@@ -2,16 +2,17 @@
 #include "@@headers.h"
 
 #include "Player.h"
+#include "Helpers.h"
 
 Player player;
 Actor ground;
 Bool physicsEnabled = false;
-Actor *lit;
+Int lit = -1;
 Grab grab;
 void InitPre()
 {
 	EE_INIT();
-	//Ms.clip(null, 1);
+	Ms.clip(null, 1);
 
 	//D.viewRange(50);
 	//Cam.dist = 10;
@@ -32,8 +33,11 @@ bool Init()
 
 	Physics.create();
 	ground.create(Box(15, 1, 15, Vec(0, -2, 0)), 0);
+	ground.group(GROUP_BACKGROUND);
 	player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
 	player.pos(Vec(0, -1.5, 0));
+	//player.ctrl.del();
+	player.ragdoll.ray(true);
 	return true;
 }
 
@@ -44,14 +48,14 @@ void Shut()
 
 void GetWorldObjectUnderCursor()
 {
-	lit = null;
+	lit = -1;
 	if (!Gui.ms() || Gui.ms() == Gui.desktop())
 	{
 		Vec     pos, dir;
 		ScreenToPosDir(Ms.pos(), pos, dir);
 		PhysHit phys_hit;
-		if (Physics.ray(pos, dir * D.viewRange(), &phys_hit, ~IndexToFlag(AG_DEFAULT)))
-			lit = (Actor*)phys_hit.obj;
+		if (Physics.ray(pos, dir * D.viewRange(), &phys_hit, IndexToFlag(GROUP_OBJ)))
+			lit = (intptr)phys_hit.user;
 	}
 }
 
@@ -77,7 +81,11 @@ bool Update()
 		if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
 			player.ragdollDisable();
 		else
+		{
+			/*player.ctrl.del();
+			player.mesh.clear();*/
 			player.ragdollEnable();
+		}
 	}
 
 	if (Kb.bp(KB_2))
@@ -89,20 +97,22 @@ bool Update()
 		}
 	}
 
-	if (lit != null && Ms.b(1))
+	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))
 	{
 		if (!grab.is())
-			grab.create(*lit, Vec(0, 2, 0), 50);
-		if (grab.is())
+			grab.create(player.ragdoll.bone(lit).actor, Vec(0, 0.2, 0), 15.0f);
+		else
 		{
 			Vec dir(0);
-			dir.x += Ms.d().x;
-			dir.y += Ms.d().y;
+			dir.x += Ms.d().x*100;
+			dir.y += Ms.d().y*100;
 			grab.pos(grab.pos() + dir * Time.d() * 2);
 		}
 	}
 	else
 	{
+		if (grab.is())
+			grab.del();
 		GetWorldObjectUnderCursor();
 	}
 
@@ -134,6 +144,9 @@ void Render()
 {
 	switch (Renderer())
 	{
+	case RM_BEHIND:
+		//player.ragdoll.draw(RED);
+		break;
 	case RM_PREPARE:
 		player.drawPrepare();
 		LightDir(!(Cam.matrix.x - Cam.matrix.y + Cam.matrix.z)).add();
@@ -149,5 +162,9 @@ void Draw()
 	//player.ragdoll.draw(RED);
 	D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
 	//ground.draw(BLACK, true);
+	if (lit >= 0 && lit < player.ragdoll.bones())
+	{
+		D.text(Vec2(0, 0.7f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
+	}
 	//D.text(Vec2(0, 0.7f), S + "Cam: " + Cam.dist + " " + Cam.roll + " " + Cam.pitch + " " + Cam.yaw + " " + Cam.matrix.pos);
 }

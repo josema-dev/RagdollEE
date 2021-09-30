@@ -122,6 +122,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
             if (sb.type == BONE_HEAD)rb.actor.adamping(7);
             else                  rb.actor.adamping(4);
             rb.actor.damping(1.5f).sleepEnergy(0.8f);
+            rb.actor.group(GROUP_OBJ);
+            rb.actor.user(ptr(i));
             //printf("Mass: %f\n", rb.actor.mass(5.0f));
             //rb.actor.mass(5.0f);
         }

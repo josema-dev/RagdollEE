@@ -26,3 +26,9 @@ T1(TYPE)   void _Unaligned(Byte& dest, C TYPE& src) { dest = src; }
 T1(TYPE)   void _Unaligned(UShort& dest, C TYPE& src) { dest = src; }
 T1(TYPE)   void _Unaligned(Int& dest, C TYPE& src) { dest = src; }
 T1(TYPE)   void _Unaligned(UInt& dest, C TYPE& src) { dest = src; }
+
+enum ACTOR_GROUPS // actor groups (for example in the game you can specify following groups: door, item, character, ..)
+{
+	GROUP_BACKGROUND, // background
+	GROUP_OBJ, // objects
+};

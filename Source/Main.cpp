@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
-Game::Chr player;
+#include "Player.h"
+
+Player player;
 Actor ground;
 Bool physicsEnabled = false;
 Actor *lit;

@@ -1048,6 +1048,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\MyRagdoll.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX11|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Universal DX11|ARM'">Create</PrecompiledHeader>
@@ -1066,6 +1068,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX11|Emscripten'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Universal DX11|Emscripten'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="Source\Helpers.h" />
+    <ClInclude Include="Source\MyRagdoll.h" />
+    <ClInclude Include="Source\Player.h" />
     <ClInclude Include="stdafx.h" />
     <Media Include="E:\Esenthel\Engine\Esenthel/Bin/Universal\Engine.pak">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Universal DX11|Emscripten'">true</ExcludedFromBuild>

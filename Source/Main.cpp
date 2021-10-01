@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "Helpers.h"
+#include "ParamWindow.h"
 
 Player player;
 Actor ground;
@@ -10,6 +11,7 @@ Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
 Button b_physicsEnabled, b_ragdollEnabled;
+ParamWindow parWindow;
 
 void InitPre()
 {
@@ -65,6 +67,8 @@ bool Init()
 	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll").func(EnableDisableRagdoll);
 	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
+	parWindow.create();
+
 	return true;
 }
 
@@ -103,6 +107,13 @@ bool Update()
 	if (Kb.b(KB_LCTRL))
 	{
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
+	}
+
+	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(0))
+	{
+		parWindow.data.name = player.ragdoll.bone(lit).name;
+		parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
+		parWindow.updateData();
 	}
 
 	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))

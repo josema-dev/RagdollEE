@@ -1070,6 +1070,7 @@
     </ClCompile>
     <ClInclude Include="Source\Helpers.h" />
     <ClInclude Include="Source\MyRagdoll.h" />
+    <ClInclude Include="Source\ParamWindow.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="stdafx.h" />
     <Media Include="E:\Esenthel\Engine\Esenthel/Bin/Universal\Engine.pak">

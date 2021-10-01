@@ -9,6 +9,8 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
+Button b_physicsEnabled, b_ragdollEnabled;
+
 void InitPre()
 {
 	EE_INIT();
@@ -18,26 +20,51 @@ void InitPre()
 	//Cam.dist = 10;
 	Cam.yaw = -PI_4;
 	Cam.pitch = -PI_3;
-}
 
-bool Init()
-{
 	Cam.dist = 1.2f;
 	Cam.roll = 0.0f;
-	Cam.pitch = 0.0f;
-	Cam.yaw = -3.0f;
-	Cam.matrix.setPos(0.0f, -1.0f, 1.3f);
+	/*Cam.pitch = 0.0f;
+	Cam.yaw = -3.0f;*/
+	Cam.matrix.setPos(0.0f, 1.0f, 1.3f);
+}
+void EnableDisableRagdoll(ptr)
+{
+	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
+	{
+		player.ragdollDisable();
+		player.ragdoll.del();
+		b_ragdollEnabled.text = "Enable Ragdoll";
+	}
+	else
+	{
+		/*player.ctrl.del();
+		player.mesh.clear();*/
+		player.ragdollEnable();
+		player.ragdoll.ray(true);
+		b_ragdollEnabled.text = "Disable Ragdoll";
+	}
+}
+bool Init()
+{
+	//Cam.dist = 1.2f;
+	//Cam.roll = 0.0f;
+	//Cam.pitch = 0.0f;
+	//Cam.yaw = -3.0f;
+	//Cam.matrix.setPos(0.0f, -1.0f, 1.3f);
 
-	//skybox = UID(2000723734, 1340256668, 421298842, 213478118);
 	Sky.atmospheric();
 
 	Physics.create();
-	ground.create(Box(15, 1, 15, Vec(0, -2, 0)), 0);
+	ground.create(Box(15, 1, 15, Vec(0, -0.5, 0)), 0);
 	ground.group(GROUP_BACKGROUND);
 	player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
 	player.pos(Vec(0, -1.5, 0));
-	//player.ctrl.del();
-	player.ragdoll.ray(true);
+	player.ctrl.del();
+	
+
+	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll").func(EnableDisableRagdoll);
+	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
+	b_physicsEnabled.mode = BUTTON_TOGGLE;
 	return true;
 }
 
@@ -61,10 +88,12 @@ void GetWorldObjectUnderCursor()
 
 bool Update()
 {
+	Gui.update();
+
 	if (Kb.bp(KB_ESC))
 		return false;
 
-	if (physicsEnabled)
+	if (b_physicsEnabled())
 	{
 		Physics.startSimulation().stopSimulation();
 	}
@@ -74,27 +103,6 @@ bool Update()
 	if (Kb.b(KB_LCTRL))
 	{
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
-	}
-
-	if (Kb.bp(KB_1))
-	{
-		if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
-			player.ragdollDisable();
-		else
-		{
-			/*player.ctrl.del();
-			player.mesh.clear();*/
-			player.ragdollEnable();
-		}
-	}
-
-	if (Kb.bp(KB_2))
-	{
-		physicsEnabled = !physicsEnabled;
-		if (!physicsEnabled)
-		{
-			player.ragdollDisable();
-		}
 	}
 
 	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))
@@ -164,7 +172,9 @@ void Draw()
 	//ground.draw(BLACK, true);
 	if (lit >= 0 && lit < player.ragdoll.bones())
 	{
-		D.text(Vec2(0, 0.7f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
+		D.text(Vec2(0, 0.8f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
 	}
 	//D.text(Vec2(0, 0.7f), S + "Cam: " + Cam.dist + " " + Cam.roll + " " + Cam.pitch + " " + Cam.yaw + " " + Cam.matrix.pos);
+
+	Gui.draw();
 }

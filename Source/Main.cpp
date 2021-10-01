@@ -113,6 +113,9 @@ bool Update()
 	{
 		parWindow.data.name = player.ragdoll.bone(lit).name;
 		parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
+		parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
+		parWindow.data.damping = player.ragdoll.bone(lit).actor.damping();
+		parWindow.data.sleepEnergy = player.ragdoll.bone(lit).actor.sleepEnergy();
 		parWindow.updateData();
 	}
 

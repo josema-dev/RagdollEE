@@ -35,7 +35,7 @@ void EnableDisableRagdoll(ptr)
 	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
 	{
 		player.ragdollDisable();
-		player.ragdoll.del();
+		//player.ragdoll.del();
 		b_ragdollEnabled.text = "Enable Ragdoll";
 	}
 	else

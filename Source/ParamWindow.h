@@ -33,4 +33,9 @@ class ParamWindow : Window
     {
         REPAO(props).toGui(&data);
     }
+
+    void updateFromGui()
+    {
+        REPAO(props).fromGui(&data);
+    }
 };

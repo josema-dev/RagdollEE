@@ -10,8 +10,9 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_ragdollEnabled;
+Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable;
 ParamWindow parWindow;
+Int ActiveBoneIdx = -1;
 
 void InitPre()
 {
@@ -39,8 +40,7 @@ void EnableDisableRagdoll(ptr)
 	}
 	else
 	{
-		/*player.ctrl.del();
-		player.mesh.clear();*/
+		//player.ctrl.del();
 		player.ragdollEnable();
 		player.ragdoll.ray(true);
 		b_ragdollEnabled.text = "Disable Ragdoll";
@@ -67,6 +67,8 @@ bool Init()
 	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll").func(EnableDisableRagdoll);
 	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
+	Gui += b_meshDrawDisable.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Disable Mesh Draw");
+	b_meshDrawDisable.mode = BUTTON_TOGGLE;
 	parWindow.create();
 
 	return true;
@@ -109,14 +111,23 @@ bool Update()
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
 	}
 
-	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(0))
+	if (Ms.b(0))
 	{
-		parWindow.data.name = player.ragdoll.bone(lit).name;
-		parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
-		parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
-		parWindow.data.damping = player.ragdoll.bone(lit).actor.damping();
-		parWindow.data.sleepEnergy = player.ragdoll.bone(lit).actor.sleepEnergy();
-		parWindow.updateData();
+		if (lit >= 0 && lit < player.ragdoll.bones())
+		{
+			parWindow.data.name = player.ragdoll.bone(lit).name;
+			parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
+			parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
+			parWindow.data.damping = player.ragdoll.bone(lit).actor.damping();
+			parWindow.data.sleepEnergy = player.ragdoll.bone(lit).actor.sleepEnergy();
+			parWindow.updateData();
+			ActiveBoneIdx = lit;
+		}
+		else
+		{
+			ActiveBoneIdx = -1;
+			//lit = -1;
+		}
 	}
 
 	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))
@@ -159,6 +170,17 @@ bool Update()
 	//Cam.dist = Max(1.0, Cam.dist * ScaleFactor(Ms.wheel() * -0.1)); // update camera distance according to mouse wheel
 	//Cam.setSpherical(player.pos(), Cam.yaw, Cam.pitch, 0, Cam.dist); // set spherical camera looking at player using camera angles
 
+	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
+	{
+		parWindow.updateFromGui();
+		//Don't want this to change as it will break ragdoll!
+		//parWindow.data.name = player.ragdoll.bone(lit).name;
+		//parWindow.data.mass = player.ragdoll.bone(lit).actor.mass(); //Mass is calculated from density. Don't overwrite it!!!
+		player.ragdoll.bone(ActiveBoneIdx).actor.adamping(parWindow.data.adamping);
+		player.ragdoll.bone(ActiveBoneIdx).actor.damping(parWindow.data.damping);
+		player.ragdoll.bone(ActiveBoneIdx).actor.sleepEnergy(parWindow.data.sleepEnergy);
+	}
+
 	return true;
 }
 
@@ -170,7 +192,8 @@ void Render()
 		//player.ragdoll.draw(RED);
 		break;
 	case RM_PREPARE:
-		player.drawPrepare();
+		if(!b_meshDrawDisable())
+			player.drawPrepare();
 		LightDir(!(Cam.matrix.x - Cam.matrix.y + Cam.matrix.z)).add();
 		//LightDir(!Vec(1, -1, 1)).add();
 		break;
@@ -180,15 +203,19 @@ void Render()
 void Draw()
 {
 	Renderer(Render);
-	Physics.draw();
+	ground.draw(WHITE);
 	//player.ragdoll.draw(RED);
+	player.ragdoll.draw(RED, YELLOW, ActiveBoneIdx);
+	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
+	{
+		player.ragdoll.drawJoints(PINK, ActiveBoneIdx);
+		player.ragdoll.bone(ActiveBoneIdx).actor.draw(YELLOW);
+	}
 	D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
-	//ground.draw(BLACK, true);
 	if (lit >= 0 && lit < player.ragdoll.bones())
 	{
 		D.text(Vec2(0, 0.8f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
 	}
-	//D.text(Vec2(0, 0.7f), S + "Cam: " + Cam.dist + " " + Cam.roll + " " + Cam.pitch + " " + Cam.yaw + " " + Cam.matrix.pos);
 
 	Gui.draw();
 }

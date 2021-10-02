@@ -4,6 +4,12 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
+enum class JOINT_ENUM
+{
+    JOINT_BODY_SPHERICAL = 0,
+    JOINT_BODY_HINGE = 1,
+};
+
 class MyRagdoll
 {
     struct JointData
@@ -71,7 +77,8 @@ class MyRagdoll
 
     // draw
     void draw(C Color& color = WHITE)C; // this can be optionally called outside of Render function
-
+    void draw(C Color& color, C Color& colorSpecial, C Int idx = -1)C; // this can be optionally called outside of Render function
+    void drawJoints(C Color& col, C Int idx)C; // draw joints of the selected bone
     // io
     Bool saveState(File& f, Bool include_matrix_vel = true)C; // save ragdoll state (following data is not  saved: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, 'include_matrix_vel'=include current bone matrixes and velocities
     Bool loadState(File& f); // load ragdoll state (following data is not loaded: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, typically you should first create a Ragdoll and then call this method to set its state according to data from the file

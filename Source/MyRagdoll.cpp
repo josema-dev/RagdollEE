@@ -105,7 +105,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                 Set(rb.name, skelBone.name);
                 rb.skel_bone = i;
                 rb.rbon_parent = 0xFF;
-                if (!rb.actor.createTry(shapeBone * T._scale, 2500, &VecZero, kinematic))return false;
+                if (!rb.actor.createTry(shapeBone * T._scale, 2500, &VecZero, kinematic))
+                    return false;
             }
             else
             {
@@ -472,8 +473,6 @@ void MyRagdoll::draw(C Color& col)C
     FREP(_bones.elms())
     {
         _bones[i].actor.draw(col);
-        SetMatrix(_bones[i].actor.matrix());
-        D.line(GREEN, _bones[i].jointData.anchor, _bones[i].jointData.anchor + _bones[i].jointData.axis * 3);
     }
 
     /*SetMatrix(_skel.)*/
@@ -482,6 +481,31 @@ void MyRagdoll::draw(C Color& col)C
         _jointsData[i].pos.draw(RED);
         D.line(GREEN, _jointsData[i].pos, _jointsData[i].pos + _jointsData[i].anchor * 3);
     }*/
+}
+
+void MyRagdoll::drawJoints(C Color& col, C Int idx)C
+{
+    SetMatrix(_bones[idx].actor.matrix());
+    _bones[idx].jointData.anchor.draw(PINK);
+    D.line(GREEN, _bones[idx].jointData.anchor, _bones[idx].jointData.anchor + _bones[idx].jointData.axis * 3);
+}
+
+void MyRagdoll::draw(C Color& color, C Color& colorSpecial, C Int idx)C
+{
+    if (idx == -1)
+    {
+        draw(color);
+    }
+    else
+    {
+        FREP(_bones.elms())
+        {
+            if(i == idx)
+                _bones[i].actor.draw(colorSpecial);
+            else
+                _bones[i].actor.draw(color);
+        }
+    }
 }
 /******************************************************************************/
 #pragma pack(push, 1)

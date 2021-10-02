@@ -111,7 +111,7 @@ bool Update()
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
 	}
 
-	if (Ms.b(0))
+	if (Ms.b(0) && Kb.b(KB_LSHIFT))
 	{
 		if (lit >= 0 && lit < player.ragdoll.bones())
 		{

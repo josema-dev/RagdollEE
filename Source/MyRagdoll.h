@@ -21,6 +21,7 @@ class MyRagdoll
             //private:
         //#endif
         Byte skel_bone, rbon_parent;
+        //Mems<Bone > _bones;
     };
 
     // manage
@@ -88,7 +89,7 @@ private:
     Flt         _scale;
     C Skeleton* _skel;
     Mems<Bone > _bones;
-    Memc<Int  > _resets;
+    Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
     Memc<Joint> _joints;
     Memc<JointData> _jointsData;
     Aggregate   _aggr;

@@ -101,11 +101,11 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                 }
                 Shape& shapeBone = shapes.New();
                 shapeBone = ShapeBone(posBone, posBoneEnd, widthBone);
-                Bone& rb = _bones.New();
-                Set(rb.name, skelBone.name);
-                rb.skel_bone = i;
-                rb.rbon_parent = 0xFF;
-                if (!rb.actor.createTry(shapeBone * T._scale, 2500, &VecZero, kinematic))
+                Bone& ragdollBone = _bones.New();
+                Set(ragdollBone.name, skelBone.name);
+                ragdollBone.skel_bone = i;
+                ragdollBone.rbon_parent = 0xFF;
+                if (!ragdollBone.actor.createTry(shapeBone * T._scale, 5000, &VecZero, kinematic))
                     return false;
             }
             else

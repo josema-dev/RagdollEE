@@ -20,16 +20,8 @@ void InitPre()
 	EE_INIT();
 	Ms.clip(null, 1);
 
-	//D.viewRange(50);
-	//Cam.dist = 10;
-	Cam.yaw = -PI_4;
-	Cam.pitch = -PI_3;
-
-	Cam.dist = 1.2f;
-	Cam.roll = 0.0f;
-	/*Cam.pitch = 0.0f;
-	Cam.yaw = -3.0f;*/
-	Cam.matrix.setPos(0.0f, 1.0f, 1.3f);
+	Cam.dist = 1;
+	Cam.yaw = PI;
 }
 void EnableDisableRagdoll(ptr)
 {
@@ -58,6 +50,8 @@ bool Init()
 	player.ragdoll.create(player.skel, player.scale, 5000);
 	player.ragdoll.ray(true);
 	singleRagdollUpdate = true;
+	
+	Cam.at = player.mesh()->ext.pos;
 	
 	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw");
 	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
@@ -110,7 +104,12 @@ bool Update()
 
 	if (Kb.b(KB_LCTRL))
 	{
+		
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
+	}
+	else
+	{
+		Cam.transformByMouse(0.1, 100, CAMH_ZOOM);
 	}
 
 	if (Ms.b(0) && Kb.b(KB_LSHIFT))
@@ -128,7 +127,6 @@ bool Update()
 		else
 		{
 			ActiveBoneIdx = -1;
-			//lit = -1;
 		}
 	}
 
@@ -150,27 +148,6 @@ bool Update()
 			grab.del();
 		GetWorldObjectUnderCursor();
 	}
-
-	
-	/*Cam.updateBegin();
-	if (Ms.b(1))
-	{
-		Cam.yaw -= Ms.d().x;
-		Cam.pitch += Ms.d().y;
-	}
-	Cam.dist* ScaleFactor(Ms.wheel() * -0.2);
-	Cam.setPosDir(player.ctrl.actor.pos() + Vec(-1, 1, 0));
-	Cam.updateEnd().set();*/
-
-	/*Cam.updateBegin().setSpherical(player.ctrl.actor.pos() + Vec(0, 1, 0),
-		player.angle.x, player.angle.y, 0,
-		Cam.dist * ScaleFactor(Ms.wheel() * -0.2)).updateEnd().set();*/
-	
-	//Cam.yaw -= Ms.d().x; // update camera yaw   angle according to mouse delta x
-	//Cam.pitch += Ms.d().y; // update camera pitch angle according to mouse delta y
-	//Clamp(Cam.pitch, -PI_2, 0); // clamp to possible camera pitch angle
-	//Cam.dist = Max(1.0, Cam.dist * ScaleFactor(Ms.wheel() * -0.1)); // update camera distance according to mouse wheel
-	//Cam.setSpherical(player.pos(), Cam.yaw, Cam.pitch, 0, Cam.dist); // set spherical camera looking at player using camera angles
 
 	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
 	{

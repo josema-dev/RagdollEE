@@ -13,6 +13,7 @@ Grab grab;
 Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable, b_ragdollDrawDisable;
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
+Int ParentBoneIdx = -1;
 Bool singleRagdollUpdate = false;
 
 void InitPre()
@@ -123,10 +124,12 @@ bool Update()
 			parWindow.data.sleepEnergy = player.ragdoll.bone(lit).actor.sleepEnergy();
 			parWindow.updateData();
 			ActiveBoneIdx = lit;
+			ParentBoneIdx = player.ragdoll.bone(ActiveBoneIdx).rbon_parent;
 		}
 		else
 		{
 			ActiveBoneIdx = -1;
+			ParentBoneIdx = -1;
 		}
 	}
 
@@ -186,8 +189,7 @@ void Draw()
 	
 	if (!b_ragdollDrawDisable())
 	{
-		//player.ragdoll.draw(RED);
-		player.ragdoll.draw(RED, YELLOW, ActiveBoneIdx);
+		player.ragdoll.draw(RED, YELLOW, PINK, ActiveBoneIdx, ParentBoneIdx);
 	}
 	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
 	{

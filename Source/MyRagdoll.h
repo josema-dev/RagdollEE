@@ -78,6 +78,7 @@ class MyRagdoll
     // draw
     void draw(C Color& color = WHITE)C; // this can be optionally called outside of Render function
     void draw(C Color& color, C Color& colorSpecial, C Int idx = -1)C; // this can be optionally called outside of Render function
+    void draw(C Color& color, C Color& colorSelect, C Color& colorParent, C Int idx = -1, C Int parentIdx = -1)C;
     void drawJoints(C Color& col, C Int idx)C; // draw joints of the selected bone
     // io
     Bool saveState(File& f, Bool include_matrix_vel = true)C; // save ragdoll state (following data is not  saved: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, 'include_matrix_vel'=include current bone matrixes and velocities

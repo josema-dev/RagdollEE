@@ -507,6 +507,26 @@ void MyRagdoll::draw(C Color& color, C Color& colorSpecial, C Int idx)C
         }
     }
 }
+
+void MyRagdoll::draw(C Color& color, C Color& colorSelect, C Color& colorParent, C Int idx, C Int parentIdx)C
+{
+    if (parentIdx == -1)
+    {
+        draw(color, colorSelect, idx);
+    }
+    else
+    {
+        FREP(_bones.elms())
+        {
+            if (i == idx)
+                _bones[i].actor.draw(colorSelect);
+            else if (i == parentIdx)
+                _bones[i].actor.draw(colorParent);
+            else
+                _bones[i].actor.draw(color);
+        }
+    }
+}
 /******************************************************************************/
 #pragma pack(push, 1)
 struct RagdollDesc

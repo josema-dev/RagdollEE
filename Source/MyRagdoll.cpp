@@ -558,13 +558,6 @@ void MyRagdoll::draw(C Color& col)C
     {
         _bones[i].actor.draw(col);
     }
-
-    /*SetMatrix(_skel.)*/
-    /*FREP(_jointsData.elms())
-    {
-        _jointsData[i].pos.draw(RED);
-        D.line(GREEN, _jointsData[i].pos, _jointsData[i].pos + _jointsData[i].anchor * 3);
-    }*/
 }
 
 void MyRagdoll::drawJoints(C Color& col, C Int idx)C

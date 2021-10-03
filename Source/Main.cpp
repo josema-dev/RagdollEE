@@ -80,7 +80,7 @@ void GetWorldObjectUnderCursor()
 	lit = -1;
 	if (!Gui.ms() || Gui.ms() == Gui.desktop())
 	{
-		Vec     pos, dir;
+		Vec pos, dir;
 		ScreenToPosDir(Ms.pos(), pos, dir);
 		PhysHit phys_hit;
 		if (Physics.ray(pos, dir * D.viewRange(), &phys_hit, IndexToFlag(GROUP_OBJ)))

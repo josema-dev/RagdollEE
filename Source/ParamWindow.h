@@ -58,7 +58,7 @@ class ParamWindow : Window
 
     void create()
     {
-        Gui += Window::create(Rect_C(-0.8, 0.6, 1.0, 1.0), "Properties").barVisible(true);
+        Gui += Window::create(Rect_C(-0.8, 0.6, 1.0, 1.0), "Properties").barVisible(true).pos(Vec2(-1.2,0.4));
         props.New().create("Name (Info)", MEMBER(BoneInfo, name)).enabled(false);
         props.New().create("Mass (Info)", MEMBER(BoneInfo, mass)).enabled(false);
         props.New().create("Damping", MEMBER(BoneInfo, damping));

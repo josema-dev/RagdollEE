@@ -105,7 +105,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                 Set(ragdollBone.name, skelBone.name);
                 ragdollBone.skel_bone = i;
                 ragdollBone.rbon_parent = 0xFF;
-                if (!ragdollBone.actor.createTry(shapeBone * T._scale, 5000, &VecZero, kinematic))
+                if (!ragdollBone.actor.createTry(shapeBone * T._scale, density, &VecZero, kinematic))
                     return false;
             }
             else

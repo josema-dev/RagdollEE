@@ -10,9 +10,10 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable;
+Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable, b_ragdollDrawDisable;
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
+Bool singleRagdollUpdate = false;
 
 void InitPre()
 {
@@ -34,26 +35,18 @@ void EnableDisableRagdoll(ptr)
 {
 	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
 	{
+		singleRagdollUpdate = true;
 		player.ragdollDisable();
-		//player.ragdoll.del();
 		b_ragdollEnabled.text = "Enable Ragdoll";
 	}
 	else
 	{
-		//player.ctrl.del();
 		player.ragdollEnable();
-		player.ragdoll.ray(true);
 		b_ragdollEnabled.text = "Disable Ragdoll";
 	}
 }
 bool Init()
 {
-	//Cam.dist = 1.2f;
-	//Cam.roll = 0.0f;
-	//Cam.pitch = 0.0f;
-	//Cam.yaw = -3.0f;
-	//Cam.matrix.setPos(0.0f, -1.0f, 1.3f);
-
 	Sky.atmospheric();
 
 	Physics.create();
@@ -62,8 +55,12 @@ bool Init()
 	player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
 	player.pos(Vec(0, -1.5, 0));
 	player.ctrl.del();
+	player.ragdoll.create(player.skel, player.scale, 5000);
+	player.ragdoll.ray(true);
+	singleRagdollUpdate = true;
 	
-
+	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw");
+	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
 	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll").func(EnableDisableRagdoll);
 	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
@@ -105,6 +102,11 @@ bool Update()
 	}
 
 	player.update();
+	if (singleRagdollUpdate)
+	{
+		player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
+		singleRagdollUpdate = false;
+	}
 
 	if (Kb.b(KB_LCTRL))
 	{
@@ -204,8 +206,12 @@ void Draw()
 {
 	Renderer(Render);
 	ground.draw(WHITE);
-	//player.ragdoll.draw(RED);
-	player.ragdoll.draw(RED, YELLOW, ActiveBoneIdx);
+	
+	if (!b_ragdollDrawDisable())
+	{
+		//player.ragdoll.draw(RED);
+		player.ragdoll.draw(RED, YELLOW, ActiveBoneIdx);
+	}
 	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
 	{
 		player.ragdoll.drawJoints(PINK, ActiveBoneIdx);

@@ -16,6 +16,11 @@ class MyRagdoll
     {
         Vec anchor;
         Vec axis;
+        JOINT_ENUM type;
+        Flt swing;
+        Flt twist;
+        Flt minAngle;
+        Flt maxAngle;
     };
     struct Bone // ragdoll bone
     {

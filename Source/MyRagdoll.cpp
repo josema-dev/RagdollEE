@@ -710,23 +710,11 @@ Bool MyRagdoll::loadState(File& f) // don't delete on fail, as here we're loadin
     }
     return false;
 }
-/******************************************************************************/
-/******************************************************************************/
-
-
-//void MyRagdoll::draw(C Color& col)C
-//{
-//	REPAO(_bones).actor.draw(col);
-//	//REPAO(_joints).
-//}
-/******************************************************************************/
 
 void MyRagdoll::recreateJoint(const Int idx)
 {
     const JointData& jointData = _bones[idx].jointData;
     Bone& ragdollBone = _bones[idx];
-    /*if (ragdollBone.rbon_parent != 0xFF)
-        return;*/
     Bone& ragdollBoneParent = _bones[((ragdollBone.rbon_parent == 0xFF) ? 0 : ragdollBone.rbon_parent)];
     _joints[jointData.idx].del();
     if (jointData.type == JOINT_ENUM::JOINT_BODY_HINGE)

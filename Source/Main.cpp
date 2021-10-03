@@ -16,6 +16,10 @@ Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
 Bool singleRagdollUpdate = false;
 
+void paramChanged(C EE::Property& prop)
+{
+	parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
+}
 void InitPre()
 {
 	EE_INIT();
@@ -170,6 +174,7 @@ bool Update()
 		player.ragdoll.bone(ActiveBoneIdx).actor.adamping(parWindow.data.adamping);
 		player.ragdoll.bone(ActiveBoneIdx).actor.damping(parWindow.data.damping);
 		player.ragdoll.bone(ActiveBoneIdx).actor.sleepEnergy(parWindow.data.sleepEnergy);
+		player.ragdoll.bone(ActiveBoneIdx).jointData.type = parWindow.data.jointType;
 		player.ragdoll.bone(ActiveBoneIdx).jointData.minAngle = parWindow.data.jointMinAngle;
 		player.ragdoll.bone(ActiveBoneIdx).jointData.maxAngle = parWindow.data.jointMaxAngle;
 		player.ragdoll.bone(ActiveBoneIdx).jointData.twist = parWindow.data.jointTwist;

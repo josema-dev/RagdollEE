@@ -16,12 +16,14 @@ class BoneInfo
     Flt damping;
     Flt sleepEnergy;
     Flt adamping;
-    JOINT_ENUM jointType;
+    JOINT_ENUM jointType = JOINT_ENUM::JOINT_BODY_SPHERICAL;
     Flt jointTwist;
     Flt jointSwing;
     Flt jointMinAngle;
     Flt jointMaxAngle;
 };
+
+void paramChanged(C EE::Property& prop);
 
 class ParamWindow : Window
 {
@@ -29,6 +31,30 @@ class ParamWindow : Window
     BoneInfo data;
 
     Int minAngleIdx, maxAngleIdx, swingIdx, twistIdx;
+    
+    void JointTypeChanged(EE::Property& prop)
+    {
+        prop.fromGui(&data);
+        JointTypeChanged(data.jointType);
+    }
+
+    void JointTypeChanged(JOINT_ENUM jointType)
+    {
+        if (jointType == JOINT_ENUM::JOINT_BODY_HINGE)
+        {
+            props[minAngleIdx].enabled(true);
+            props[maxAngleIdx].enabled(true);
+            props[twistIdx].enabled(false);
+            props[swingIdx].enabled(false);
+        }
+        else if (jointType == JOINT_ENUM::JOINT_BODY_SPHERICAL)
+        {
+            props[minAngleIdx].enabled(false);
+            props[maxAngleIdx].enabled(false);
+            props[twistIdx].enabled(true);
+            props[swingIdx].enabled(true);
+        }
+    }
 
     void create()
     {
@@ -38,7 +64,7 @@ class ParamWindow : Window
         props.New().create("Damping", MEMBER(BoneInfo, damping));
         props.New().create("Angular Damping", MEMBER(BoneInfo, adamping));
         props.New().create("Sleep Energy", MEMBER(BoneInfo, sleepEnergy));
-        props.New().create("Joint Type", MEMBER(BoneInfo, jointType)).setEnum(enum_names, Elms(enum_names)).enabled(false);
+        props.New().create("Joint Type", MEMBER(BoneInfo, jointType)).setEnum(enum_names, Elms(enum_names)).enabled(true).changed(paramChanged);
         swingIdx = props.elms();
         props.New().create("Swing (Deg)", MEMBER(BoneInfo, jointSwing));
         twistIdx = props.elms();
@@ -53,21 +79,8 @@ class ParamWindow : Window
 
     void updateData()
     {
-        if (data.jointType == JOINT_ENUM::JOINT_BODY_HINGE)
-        {
-            props[minAngleIdx].enabled(true);
-            props[maxAngleIdx].enabled(true);
-            props[twistIdx].enabled(false);
-            props[swingIdx].enabled(false);
-        }
-        else if (data.jointType == JOINT_ENUM::JOINT_BODY_SPHERICAL)
-        {
-            props[minAngleIdx].enabled(false);
-            props[maxAngleIdx].enabled(false);
-            props[twistIdx].enabled(true);
-            props[swingIdx].enabled(true);
-        }
         REPAO(props).toGui(&data);
+        JointTypeChanged(data.jointType);
     }
 
     void updateFromGui()

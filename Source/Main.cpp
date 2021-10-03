@@ -122,6 +122,11 @@ bool Update()
 			parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
 			parWindow.data.damping = player.ragdoll.bone(lit).actor.damping();
 			parWindow.data.sleepEnergy = player.ragdoll.bone(lit).actor.sleepEnergy();
+			parWindow.data.jointType = player.ragdoll.bone(lit).jointData.type;
+			parWindow.data.jointMaxAngle = player.ragdoll.bone(lit).jointData.maxAngle;
+			parWindow.data.jointMinAngle = player.ragdoll.bone(lit).jointData.minAngle;
+			parWindow.data.jointSwing = player.ragdoll.bone(lit).jointData.swing;
+			parWindow.data.jointTwist = player.ragdoll.bone(lit).jointData.twist;
 			parWindow.updateData();
 			ActiveBoneIdx = lit;
 			ParentBoneIdx = player.ragdoll.bone(ActiveBoneIdx).rbon_parent;

@@ -113,10 +113,12 @@ bool Update()
 		Cam.transformByMouse(0.1, 100, CAMH_ZOOM);
 	}
 
-	if (Ms.b(0) && Kb.b(KB_LSHIFT))
+	if (Ms.bp(0) && Kb.b(KB_LSHIFT))
 	{
 		if (lit >= 0 && lit < player.ragdoll.bones())
 		{
+			if (ActiveBoneIdx >= 0)
+				player.ragdoll.recreateJoint(ActiveBoneIdx);
 			parWindow.data.name = player.ragdoll.bone(lit).name;
 			parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
 			parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
@@ -133,6 +135,8 @@ bool Update()
 		}
 		else
 		{
+			if(ActiveBoneIdx >= 0)
+				player.ragdoll.recreateJoint(ActiveBoneIdx);
 			ActiveBoneIdx = -1;
 			ParentBoneIdx = -1;
 		}
@@ -166,6 +170,10 @@ bool Update()
 		player.ragdoll.bone(ActiveBoneIdx).actor.adamping(parWindow.data.adamping);
 		player.ragdoll.bone(ActiveBoneIdx).actor.damping(parWindow.data.damping);
 		player.ragdoll.bone(ActiveBoneIdx).actor.sleepEnergy(parWindow.data.sleepEnergy);
+		player.ragdoll.bone(ActiveBoneIdx).jointData.minAngle = parWindow.data.jointMinAngle;
+		player.ragdoll.bone(ActiveBoneIdx).jointData.maxAngle = parWindow.data.jointMaxAngle;
+		player.ragdoll.bone(ActiveBoneIdx).jointData.twist = parWindow.data.jointTwist;
+		player.ragdoll.bone(ActiveBoneIdx).jointData.swing = parWindow.data.jointSwing;
 	}
 
 	return true;

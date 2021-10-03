@@ -21,6 +21,9 @@ class MyRagdoll
         Flt twist;
         Flt minAngle;
         Flt maxAngle;
+        Int idx;
+        Vec skelBonePos; //need to recreate joint
+        Vec skelBoneDir; //need to recreate joint
     };
     struct Bone // ragdoll bone
     {
@@ -80,6 +83,7 @@ class MyRagdoll
     Int findBoneIndexFromSkelBone(Byte skel_bone_index)C; // find ragdoll bone index, from skeleton bone index, -1 on fail
     Int findBoneIndexFromVtxMatrix(Byte    matrix_index)C; // find ragdoll bone index, from vertex matrix index, -1 on fail
 
+    void recreateJoint(const Int idx);
     // draw
     void draw(C Color& color = WHITE)C; // this can be optionally called outside of Render function
     void draw(C Color& color, C Color& colorSpecial, C Int idx = -1)C; // this can be optionally called outside of Render function
@@ -104,7 +108,6 @@ private:
     Mems<Bone > _bones;
     Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
     Memc<Joint> _joints;
-    Memc<JointData> _jointsData;
     Aggregate   _aggr;
 };
 /******************************************************************************/

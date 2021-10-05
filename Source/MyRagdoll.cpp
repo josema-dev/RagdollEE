@@ -142,8 +142,6 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
             rb.actor.damping(1.5f).sleepEnergy(0.8f);
             rb.actor.group(GROUP_OBJ);
             rb.actor.user(ptr(i));
-            //printf("Mass: %f\n", ragdollBone.actor.mass(5.0f));
-            //ragdollBone.actor.mass(5.0f);
         }
 
         if (!kinematic)
@@ -165,7 +163,6 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                         {
                             if (skelBoneParent.type == BONE_NECK)
                             {
-                                //_jointsData.add(JointData( skelBone.pos * _scale, skelBone.dir ));
                                 ragdollBone.jointData.anchor = skelBone.pos * _scale * scale2;
                                 ragdollBone.jointData.axis = skelBone.dir;
                                 ragdollBone.jointData.type = JOINT_ENUM::JOINT_BODY_HINGE;
@@ -178,7 +175,6 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                             }
                             else
                             {
-                                //_jointsData.add(JointData(skelBone.pos* _scale, skelBone.dir));
                                 ragdollBone.jointData.anchor = skelBone.pos * _scale * scale2;
                                 ragdollBone.jointData.axis = skelBone.dir;
                                 ragdollBone.jointData.type = JOINT_ENUM::JOINT_BODY_HINGE;

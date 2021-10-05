@@ -14,7 +14,6 @@ Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable, b_ragdollDrawDisab
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
-Bool singleRagdollUpdate = false;
 
 void paramChanged(C EE::Property& prop)
 {
@@ -28,20 +27,7 @@ void InitPre()
 	Cam.dist = 1;
 	Cam.yaw = PI;
 }
-//void EnableDisableRagdoll(ptr)
-//{
-//	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
-//	{
-//		singleRagdollUpdate = true;
-//		player.ragdollDisable();
-//		b_ragdollEnabled.text = "Enable Ragdoll";
-//	}
-//	else
-//	{
-//		player.ragdollEnable();
-//		b_ragdollEnabled.text = "Disable Ragdoll";
-//	}
-//}
+
 bool Init()
 {
 	Sky.atmospheric();
@@ -54,13 +40,12 @@ bool Init()
 	player.ctrl.del();
 	player.ragdoll.create(player.skel, player.scale, 5000);
 	player.ragdoll.ray(true);
-	//singleRagdollUpdate = true;
 	
 	Cam.at = player.mesh()->ext.pos;
 	
 	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw");
 	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
-	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll");// .func(EnableDisableRagdoll);
+	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll");
 	b_ragdollEnabled.mode = BUTTON_TOGGLE;
 	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
@@ -102,23 +87,20 @@ bool Update()
 	}
 
 	player.update();
-	if (!b_physicsEnabled())
+
+	if (!b_physicsEnabled() || !b_ragdollEnabled())
 	{
 		player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
-		singleRagdollUpdate = false;
 	}
 
 	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL && !b_ragdollEnabled())
 	{
-		singleRagdollUpdate = true;
 		player.ragdollDisable();
 		player.ragdoll.active(true);
-		//b_ragdollEnabled.text = "Enable Ragdoll";
 	}
 	else if (player.ragdoll_mode == Game::Chr::RAGDOLL_NONE && b_ragdollEnabled())
 	{
 		player.ragdollEnable();
-		//b_ragdollEnabled.text = "Disable Ragdoll";
 	}
 
 	if (Kb.b(KB_LCTRL))
@@ -203,13 +185,11 @@ void Render()
 	switch (Renderer())
 	{
 	case RM_BEHIND:
-		//player.ragdoll.draw(RED);
 		break;
 	case RM_PREPARE:
 		if(!b_meshDrawDisable())
 			player.drawPrepare();
 		LightDir(!(Cam.matrix.x - Cam.matrix.y + Cam.matrix.z)).add();
-		//LightDir(!Vec(1, -1, 1)).add();
 		break;
 	}
 }
@@ -226,7 +206,6 @@ void Draw()
 	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
 	{
 		player.ragdoll.drawJoints(PINK, ActiveBoneIdx);
-		//player.ragdoll.bone(ActiveBoneIdx).actor.draw(YELLOW);
 	}
 	D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
 	if (lit >= 0 && lit < player.ragdoll.bones())

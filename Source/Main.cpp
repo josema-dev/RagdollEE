@@ -10,7 +10,8 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable, b_ragdollDrawDisable;
+Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable,
+	b_ragdollDrawDisable, b_saveParams, b_loadParams;
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
@@ -18,6 +19,99 @@ Int ParentBoneIdx = -1;
 void paramChanged(C EE::Property& prop)
 {
 	parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
+}
+
+void saveParams(Ptr user)
+{
+	XmlData xml;
+	for (int i = 0; i < player.ragdoll.bones(); i++)
+	{
+		MyRagdoll::Bone& ragdollBone = player.ragdoll.bone(i);
+		XmlNode& node = xml.getNode(ragdollBone.name);
+		node.params.New().set("Idx", i);
+		node.params.New().set("Name", ragdollBone.name);
+		node.params.New().set("IdxParent", ragdollBone.rbon_parent);
+		node.params.New().set("IdxSkelBone", ragdollBone.skel_bone);
+		node.params.New().set("JointAnchor", ragdollBone.jointData.anchor);
+		node.params.New().set("JointAxis", ragdollBone.jointData.axis);
+		node.params.New().set("IdxJoint", ragdollBone.jointData.idx);
+		node.params.New().set("JointMaxAngle", ragdollBone.jointData.maxAngle);
+		node.params.New().set("JointMinAngle", ragdollBone.jointData.minAngle);
+		node.params.New().set("JointSkelBoneDir", ragdollBone.jointData.skelBoneDir);
+		node.params.New().set("JointSkelBonePos", ragdollBone.jointData.skelBonePos);
+		node.params.New().set("JointSwing", ragdollBone.jointData.swing);
+		node.params.New().set("JointTwist", ragdollBone.jointData.twist);
+		node.params.New().set("JointType", static_cast<int>(ragdollBone.jointData.type));
+	}
+	xml.save("xml.txt");
+}
+void loadParams(Ptr user)
+{
+	XmlData xml;
+	xml.load("xml.txt"); // load from file
+	Mems<MyRagdoll::Bone> bones;
+	bones.setNum(player.ragdoll.bones());
+
+	for (int i = 0; i < player.ragdoll.bones(); i++)
+	{
+		MyRagdoll::Bone& ragdollBone = player.ragdoll.bone(i);
+		MyRagdoll::Bone ragdollBoneTmp;
+		if (XmlNode* node = xml.findNode(ragdollBone.name))
+		{
+			if (XmlParam* param = node->findParam("Name"))
+			{
+				Set(bones[i].name, param->asText());
+			}
+			if (XmlParam* param = node->findParam("IdxParent"))
+			{
+				bones[i].rbon_parent = param->asInt();
+			}
+			if (XmlParam* param = node->findParam("IdxSkelBone"))
+			{
+				bones[i].skel_bone = param->asInt();
+			}
+			if (XmlParam* param = node->findParam("JointAnchor"))
+			{
+				bones[i].jointData.anchor = param->asVec();
+			}
+			if (XmlParam* param = node->findParam("JointAxis"))
+			{
+				bones[i].jointData.axis = param->asVec();
+			}
+			if (XmlParam* param = node->findParam("IdxJoint"))
+			{
+				bones[i].jointData.idx = param->asInt();
+			}
+			if (XmlParam* param = node->findParam("JointMaxAngle"))
+			{
+				bones[i].jointData.maxAngle= param->asFlt();
+			}
+			if (XmlParam* param = node->findParam("JointMinAngle"))
+			{
+				bones[i].jointData.minAngle = param->asFlt();
+			}
+			if (XmlParam* param = node->findParam("JointSkelBoneDir"))
+			{
+				bones[i].jointData.skelBoneDir = param->asVec();
+			}
+			if (XmlParam* param = node->findParam("JointSkelBonePos"))
+			{
+				bones[i].jointData.skelBonePos = param->asVec();
+			}
+			if (XmlParam* param = node->findParam("JointSwing"))
+			{
+				bones[i].jointData.swing = param->asFlt();
+			}
+			if (XmlParam* param = node->findParam("JointTwist"))
+			{
+				bones[i].jointData.twist = param->asFlt();
+			}
+			if (XmlParam* param = node->findParam("JointType"))
+			{
+				bones[i].jointData.type = static_cast<JOINT_ENUM>(param->asInt());
+			}
+		}
+	}
 }
 void InitPre()
 {
@@ -47,10 +141,12 @@ bool Init()
 	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
 	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll");
 	b_ragdollEnabled.mode = BUTTON_TOGGLE;
-	Gui += b_physicsEnabled.create(Rect_C(0.3, 0.7, 0.45, 0.08), "Enable Physics");
+	Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.6, 0.45, 0.08), "Start Simulation");
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
-	Gui += b_meshDrawDisable.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Disable Mesh Draw");
+	Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.7, 0.55, 0.08), "Disable Mesh Draw");
 	b_meshDrawDisable.mode = BUTTON_TOGGLE;
+	Gui += b_saveParams.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Save Params").func(saveParams);
+	Gui += b_loadParams.create(Rect_C(0.9, 0.6, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
 
 	return true;

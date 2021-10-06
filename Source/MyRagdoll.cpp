@@ -700,10 +700,10 @@ Bool MyRagdoll::loadState(File& f) // don't delete on fail, as here we're loadin
     return false;
 }
 
-void MyRagdoll::recreateJoint(const Int idx)
+void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
 {
-    const JointData& jointData = _bones[idx].jointData;
-    Bone& ragdollBone = _bones[idx];
+    const JointData& jointData = _bones[ragdollBoneIdx].jointData;
+    Bone& ragdollBone = _bones[ragdollBoneIdx];
     Bone& ragdollBoneParent = _bones[((ragdollBone.rbon_parent == 0xFF) ? 0 : ragdollBone.rbon_parent)];
     _joints[jointData.idx].del();
     if (jointData.type == JOINT_ENUM::JOINT_BODY_HINGE)

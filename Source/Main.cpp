@@ -10,11 +10,12 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_ragdollEnabled, b_meshDrawDisable,
+Button b_physicsEnabled, b_meshDrawDisable,
 	b_ragdollDrawDisable, b_saveParams, b_loadParams;
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
+bool resetRagdoll = false;
 
 void paramChanged(C EE::Property& prop)
 {
@@ -113,6 +114,22 @@ void loadParams(Ptr user)
 		}
 	}
 }
+
+void simulationStart(Ptr usr)
+{
+	if (!b_physicsEnabled())
+	{
+		resetRagdoll = true;
+	}
+}
+
+void disableRagdollDraw(Ptr usr)
+{
+	if (b_ragdollDrawDisable())
+		player.ragdoll.ray(false);
+	else
+		player.ragdoll.ray(true);
+}
 void InitPre()
 {
 	EE_INIT();
@@ -137,11 +154,9 @@ bool Init()
 	
 	Cam.at = player.mesh()->ext.pos;
 	
-	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw");
+	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
 	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
-	Gui += b_ragdollEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Enable Ragdoll");
-	b_ragdollEnabled.mode = BUTTON_TOGGLE;
-	Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.6, 0.45, 0.08), "Start Simulation");
+	Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Start Simulation").func(simulationStart);
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
 	Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.7, 0.55, 0.08), "Disable Mesh Draw");
 	b_meshDrawDisable.mode = BUTTON_TOGGLE;
@@ -177,6 +192,14 @@ bool Update()
 	if (Kb.bp(KB_ESC))
 		return false;
 
+	if (resetRagdoll)
+	{
+		if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
+		{
+			player.ragdollDisable();
+			resetRagdoll = false;
+		}
+	}
 	if (b_physicsEnabled())
 	{
 		Physics.startSimulation().stopSimulation();
@@ -184,20 +207,13 @@ bool Update()
 
 	player.update();
 
-	if (!b_physicsEnabled() || !b_ragdollEnabled())
+	if (!b_physicsEnabled())
 	{
 		player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
 	}
 
-	if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL && !b_ragdollEnabled())
-	{
-		player.ragdollDisable();
-		player.ragdoll.active(true);
-	}
-	else if (player.ragdoll_mode == Game::Chr::RAGDOLL_NONE && b_ragdollEnabled())
-	{
+	if (player.ragdoll_mode != Game::Chr::RAGDOLL_FULL)
 		player.ragdollEnable();
-	}
 
 	if (Kb.b(KB_LCTRL))
 	{

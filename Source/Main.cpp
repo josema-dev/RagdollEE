@@ -47,12 +47,14 @@ void saveParams(Ptr user)
 		node.params.New().set("ActorDamping", ragdollBone.actor.damping());
 		node.params.New().set("ActorSleepEnergy", ragdollBone.actor.sleepEnergy());
 	}
-	xml.save("xml.txt");
+	xml.save("ragdoll_params.txt");
 }
 void loadParams(Ptr user)
 {
+	if (ActiveBoneIdx != -1)
+		return;
 	XmlData xml;
-	xml.load("xml.txt"); // load from file
+	xml.load("ragdoll_params.txt"); // load from file
 	/*Mems<MyRagdoll::Bone> bones;
 	bones.setNum(player.ragdoll.bones());*/
 
@@ -149,7 +151,9 @@ void disableRagdollDraw(Ptr usr)
 void InitPre()
 {
 	EE_INIT();
-	Ms.clip(null, 1);
+	App.flag = APP_RESIZABLE | APP_MAXIMIZABLE;
+	App.x = 0;
+	App.y = 0;
 
 	Cam.dist = 1;
 	Cam.yaw = PI;
@@ -170,14 +174,14 @@ bool Init()
 	
 	Cam.at = player.mesh()->ext.pos;
 	
-	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.7, 0.65, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
+	Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.9, 0.65, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
 	b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
-	Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.7, 0.45, 0.08), "Start Simulation").func(simulationStart);
+	Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.9, 0.45, 0.08), "Start Simulation").func(simulationStart);
 	b_physicsEnabled.mode = BUTTON_TOGGLE;
-	Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.7, 0.55, 0.08), "Disable Mesh Draw");
+	Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.9, 0.55, 0.08), "Disable Mesh Draw");
 	b_meshDrawDisable.mode = BUTTON_TOGGLE;
-	Gui += b_saveParams.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Save Params").func(saveParams);
-	Gui += b_loadParams.create(Rect_C(0.9, 0.6, 0.55, 0.08), "Load Params").func(loadParams);
+	Gui += b_saveParams.create(Rect_C(0.9, 0.9, 0.55, 0.08), "Save Params").func(saveParams);
+	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
 
 	return true;
@@ -204,6 +208,10 @@ void GetWorldObjectUnderCursor()
 bool Update()
 {
 	Gui.update();
+	if (b_physicsEnabled())
+	{
+		Physics.startSimulation().stopSimulation();
+	}
 
 	if (Kb.bp(KB_ESC))
 		return false;
@@ -215,10 +223,6 @@ bool Update()
 			player.ragdollDisable();
 			resetRagdoll = false;
 		}
-	}
-	if (b_physicsEnabled())
-	{
-		Physics.startSimulation().stopSimulation();
 	}
 
 	player.update();
@@ -259,6 +263,7 @@ bool Update()
 			parWindow.data.jointTwist = player.ragdoll.bone(lit).jointData.twist;
 			parWindow.updateData();
 			ActiveBoneIdx = lit;
+			b_loadParams.enabled(false);
 			ParentBoneIdx = player.ragdoll.bone(ActiveBoneIdx).rbon_parent;
 		}
 		else
@@ -267,19 +272,34 @@ bool Update()
 				player.ragdoll.recreateJoint(ActiveBoneIdx);
 			ActiveBoneIdx = -1;
 			ParentBoneIdx = -1;
+			b_loadParams.enabled(true);
 		}
 	}
 
 	if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))
 	{
 		if (!grab.is())
-			grab.create(player.ragdoll.bone(lit).actor, Vec(0, 0.2, 0), 15.0f);
+		{
+			Vec pos, dir;
+			ScreenToPosDir(Ms.pos(), pos, dir);
+			PhysHit selector;
+			if (Physics.ray(pos, dir * D.viewRange(), &selector)) {
+				grab.pos(selector.plane.pos);
+			}
+
+			grab.create(player.ragdoll.bone(lit).actor, selector.plane.pos, 1500.0f);
+		}
 		else
 		{
 			Vec dir(0);
 			dir.x += Ms.d().x*100;
 			dir.y += Ms.d().y*100;
 			grab.pos(grab.pos() + dir * Time.d() * 2);
+			
+			/*Vec result = (0, 0, 0);
+			result.x = Ms.d().x * Cos(player.angle.x) - Ms.d().y * Sin(player.angle.x);
+			result.z = Ms.d().x * Sin(player.angle.x) + Ms.d().y * Cos(player.angle.x);
+			grab.pos(grab.pos() + result * Time.d() * 50);*/
 		}
 	}
 	else
@@ -330,16 +350,16 @@ void Draw()
 	if (!b_ragdollDrawDisable())
 	{
 		player.ragdoll.draw(RED, YELLOW, PINK, ActiveBoneIdx, ParentBoneIdx);
+		if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
+		{
+			player.ragdoll.drawJoints(BLACK, ActiveBoneIdx);
+		}
 	}
-	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
-	{
-		player.ragdoll.drawJoints(PINK, ActiveBoneIdx);
-	}
-	D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
+	/*D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
 	if (lit >= 0 && lit < player.ragdoll.bones())
 	{
 		D.text(Vec2(0, 0.8f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
-	}
+	}*/
 
 	Gui.draw();
 }

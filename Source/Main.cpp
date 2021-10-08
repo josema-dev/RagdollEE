@@ -17,6 +17,39 @@ Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
 bool resetRagdoll = false;
 
+void dummyDataNoBoneSelected()
+{
+	parWindow.data.name = "";
+	parWindow.data.mass = -1.0f;
+	parWindow.data.adamping = -1.0f;
+	parWindow.data.damping = -1.0f;
+	parWindow.data.sleepEnergy = -1.0f;
+	parWindow.data.jointType = JOINT_ENUM::JOINT_NO;
+	parWindow.data.jointMaxAngle = 0.0f;
+	parWindow.data.jointMinAngle = 0.0f;
+	parWindow.data.jointSwing = 0.0f;
+	parWindow.data.jointTwist = 0.0f;
+	parWindow.updateData();
+}
+void updatePlayerRagdollParams()
+{
+	if (ActiveBoneIdx < 0 || ActiveBoneIdx >= player.ragdoll.bones())
+		return;
+	parWindow.updateFromGui();
+	//Don't want this to change as it will break ragdoll!
+	//parWindow.data.name = player.ragdoll.bone(lit).name;
+	//parWindow.data.mass = player.ragdoll.bone(lit).actor.mass(); //Mass is calculated from density. Don't overwrite it!!!
+	player.ragdoll.bone(ActiveBoneIdx).actor.adamping(parWindow.data.adamping);
+	player.ragdoll.bone(ActiveBoneIdx).actor.damping(parWindow.data.damping);
+	player.ragdoll.bone(ActiveBoneIdx).actor.sleepEnergy(parWindow.data.sleepEnergy);
+	player.ragdoll.bone(ActiveBoneIdx).jointData.type = parWindow.data.jointType;
+	player.ragdoll.bone(ActiveBoneIdx).jointData.minAngle = parWindow.data.jointMinAngle;
+	player.ragdoll.bone(ActiveBoneIdx).jointData.maxAngle = parWindow.data.jointMaxAngle;
+	player.ragdoll.bone(ActiveBoneIdx).jointData.twist = parWindow.data.jointTwist;
+	player.ragdoll.bone(ActiveBoneIdx).jointData.swing = parWindow.data.jointSwing;
+	player.ragdoll.recreateJoint(ActiveBoneIdx);
+}
+
 void paramChanged(C EE::Property& prop)
 {
 	parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
@@ -24,6 +57,7 @@ void paramChanged(C EE::Property& prop)
 
 void saveParams(Ptr user)
 {
+	updatePlayerRagdollParams();
 	XmlData xml;
 	for (int i = 0; i < player.ragdoll.bones(); i++)
 	{
@@ -135,6 +169,7 @@ void loadParams(Ptr user)
 
 void simulationStart(Ptr usr)
 {
+	updatePlayerRagdollParams();
 	if (!b_physicsEnabled())
 	{
 		resetRagdoll = true;
@@ -183,6 +218,7 @@ bool Init()
 	Gui += b_saveParams.create(Rect_C(0.9, 0.9, 0.55, 0.08), "Save Params").func(saveParams);
 	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
+	dummyDataNoBoneSelected();
 
 	return true;
 }
@@ -250,7 +286,7 @@ bool Update()
 		if (lit >= 0 && lit < player.ragdoll.bones())
 		{
 			if (ActiveBoneIdx >= 0)
-				player.ragdoll.recreateJoint(ActiveBoneIdx);
+				updatePlayerRagdollParams();
 			parWindow.data.name = player.ragdoll.bone(lit).name;
 			parWindow.data.mass = player.ragdoll.bone(lit).actor.mass();
 			parWindow.data.adamping = player.ragdoll.bone(lit).actor.adamping();
@@ -268,10 +304,13 @@ bool Update()
 		}
 		else
 		{
-			if(ActiveBoneIdx >= 0)
-				player.ragdoll.recreateJoint(ActiveBoneIdx);
+			if (ActiveBoneIdx >= 0)
+			{
+				updatePlayerRagdollParams();
+			}
 			ActiveBoneIdx = -1;
 			ParentBoneIdx = -1;
+			dummyDataNoBoneSelected();
 			b_loadParams.enabled(true);
 		}
 	}
@@ -307,22 +346,6 @@ bool Update()
 		if (grab.is())
 			grab.del();
 		GetWorldObjectUnderCursor();
-	}
-
-	if (ActiveBoneIdx >= 0 && ActiveBoneIdx < player.ragdoll.bones())
-	{
-		parWindow.updateFromGui();
-		//Don't want this to change as it will break ragdoll!
-		//parWindow.data.name = player.ragdoll.bone(lit).name;
-		//parWindow.data.mass = player.ragdoll.bone(lit).actor.mass(); //Mass is calculated from density. Don't overwrite it!!!
-		player.ragdoll.bone(ActiveBoneIdx).actor.adamping(parWindow.data.adamping);
-		player.ragdoll.bone(ActiveBoneIdx).actor.damping(parWindow.data.damping);
-		player.ragdoll.bone(ActiveBoneIdx).actor.sleepEnergy(parWindow.data.sleepEnergy);
-		player.ragdoll.bone(ActiveBoneIdx).jointData.type = parWindow.data.jointType;
-		player.ragdoll.bone(ActiveBoneIdx).jointData.minAngle = parWindow.data.jointMinAngle;
-		player.ragdoll.bone(ActiveBoneIdx).jointData.maxAngle = parWindow.data.jointMaxAngle;
-		player.ragdoll.bone(ActiveBoneIdx).jointData.twist = parWindow.data.jointTwist;
-		player.ragdoll.bone(ActiveBoneIdx).jointData.swing = parWindow.data.jointSwing;
 	}
 
 	return true;

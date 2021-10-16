@@ -34,3 +34,6 @@ Version 0.0.1 alpha. For test purpose only!
 * Load params: Load ragdoll params from ragdoll_params.txt and set it into current ragdoll. IMPORTAND! Deselect all actors to enable load button.
 
 ## ChangeLog
+### Version 0.0.2
+* Save selected actor and joint settings when switch too simulation mode or params are saved to file.
+

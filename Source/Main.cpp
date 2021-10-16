@@ -72,8 +72,6 @@ void saveParams(Ptr user)
 		node.params.New().set("IdxJoint", ragdollBone.jointData.idx);
 		node.params.New().set("JointMaxAngle", ragdollBone.jointData.maxAngle);
 		node.params.New().set("JointMinAngle", ragdollBone.jointData.minAngle);
-		node.params.New().set("JointSkelBoneDir", ragdollBone.jointData.skelBoneDir);
-		node.params.New().set("JointSkelBonePos", ragdollBone.jointData.skelBonePos);
 		node.params.New().set("JointSwing", ragdollBone.jointData.swing);
 		node.params.New().set("JointTwist", ragdollBone.jointData.twist);
 		node.params.New().set("JointType", static_cast<int>(ragdollBone.jointData.type));
@@ -128,14 +126,6 @@ void loadParams(Ptr user)
 			if (XmlParam* param = node->findParam("JointMinAngle"))
 			{
 				ragdollBone.jointData.minAngle = param->asFlt();
-			}
-			if (XmlParam* param = node->findParam("JointSkelBoneDir"))
-			{
-				ragdollBone.jointData.skelBoneDir = param->asVec();
-			}
-			if (XmlParam* param = node->findParam("JointSkelBonePos"))
-			{
-				ragdollBone.jointData.skelBonePos = param->asVec();
 			}
 			if (XmlParam* param = node->findParam("JointSwing"))
 			{

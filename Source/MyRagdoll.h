@@ -23,8 +23,6 @@ class MyRagdoll
         Flt minAngle = 0.0f;
         Flt maxAngle = 0.0f;
         Int idx = -1;
-        Vec skelBonePos = Vec(0); //need to recreate joint
-        Vec skelBoneDir = Vec(0); //need to recreate joint
     };
     struct Bone // ragdoll bone
     {
@@ -36,7 +34,6 @@ class MyRagdoll
             //private:
         //#endif
         Byte skel_bone, rbon_parent;
-        //Mems<Bone > _bones;
     };
 
     // manage

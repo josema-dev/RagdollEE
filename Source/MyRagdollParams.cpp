@@ -93,7 +93,7 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 			{
 				ragdollBone.actor.damping(param->asFlt());
 			}
-			if (XmlParam* param = node->findParam("JointTwist"))
+			if (XmlParam* param = node->findParam("ActorSleepEnergy"))
 			{
 				ragdollBone.actor.sleepEnergy(param->asFlt());
 			}

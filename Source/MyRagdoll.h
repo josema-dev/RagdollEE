@@ -1,5 +1,5 @@
-/******************************************************************************/
-#pragma once
+#ifndef __MY_RAGDOLL_H__
+#define __MY_RAGDOLL_H__
 
 #include "stdafx.h"
 #include "@@headers.h"
@@ -96,3 +96,5 @@ private:
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }
 /******************************************************************************/
 /******************************************************************************/
+
+#endif //__MY_RAGDOLL_H__

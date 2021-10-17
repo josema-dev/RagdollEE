@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PARAM_WINDOW_H__
+#define __PARAM_WINDOW_H__
 
 #include "stdafx.h"
 #include "@@headers.h"
@@ -88,3 +89,5 @@ class ParamWindow : Window
         REPAO(props).fromGui(&data);
     }
 };
+
+#endif //__PARAM_WINDOW_H__

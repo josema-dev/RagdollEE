@@ -58,6 +58,9 @@
     <ClCompile Include="Source\Player.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\MyRagdollParams.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\MyRagdoll.h">

@@ -3,6 +3,8 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
+class Player;
+
 enum class JOINT_ENUM
 {
     JOINT_NO = -1,
@@ -31,6 +33,8 @@ struct RagdollActorData
 class RagdollData
 {
 public:
+    bool SaveRagdollData(Ptr user, const Player& player) const;
+    bool LoadRagdollData(Ptr user, Player& player);
 protected:
 private:
     Mems<RagdollActorData > _ragdollBones;

@@ -1049,6 +1049,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\MyRagdoll.cpp" />
+    <ClCompile Include="Source\MyRagdollParams.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX11|ARM'">Create</PrecompiledHeader>

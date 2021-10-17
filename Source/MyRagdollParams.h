@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
+
 class Player;
 
 enum class JOINT_ENUM
@@ -28,6 +29,11 @@ struct RagdollActorData
 {
     Char8 name[32]; // name
     JointData jointData;
+    Byte ragdollBoneParentIdx;
+    Byte skelBoneIdx;
+    Flt angularDamping;
+    Flt damping;
+    Flt sleepEnergy;
 };
 
 class RagdollData

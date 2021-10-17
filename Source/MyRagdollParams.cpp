@@ -35,6 +35,7 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 {
 	XmlData xml;
 	xml.load("ragdoll_params.txt"); // load from file
+	RagdollActorData ragdollActorData;
 
 	for (int i = 0; i < player.ragdoll.bones(); i++)
 	{
@@ -44,26 +45,32 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 			if (XmlParam* param = node->findParam("Name"))
 			{
 				Set(ragdollBone.name, param->asText());
+				Set(ragdollActorData.name, param->asText());
 			}
 			if (XmlParam* param = node->findParam("IdxParent"))
 			{
 				ragdollBone.rbon_parent = param->asInt();
+				ragdollActorData.ragdollBoneParentIdx = param->asInt();
 			}
 			if (XmlParam* param = node->findParam("IdxSkelBone"))
 			{
 				ragdollBone.skel_bone = param->asInt();
+				ragdollActorData.skelBoneIdx = param->asInt();
 			}
 			if (XmlParam* param = node->findParam("JointAnchor"))
 			{
 				ragdollBone.jointData.anchor = param->asVec();
+				ragdollActorData.jointData.anchor = param->asVec();
 			}
 			if (XmlParam* param = node->findParam("JointAxis"))
 			{
 				ragdollBone.jointData.axis = param->asVec();
+				ragdollActorData.jointData.axis = param->asVec();
 			}
 			if (XmlParam* param = node->findParam("IdxJoint"))
 			{
 				ragdollBone.jointData.idx = param->asInt();
+				ragdollActorData.jointData.idx = param->asInt();
 			}
 			if (XmlParam* param = node->findParam("JointMaxAngle"))
 			{
@@ -72,33 +79,41 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 			if (XmlParam* param = node->findParam("JointMinAngle"))
 			{
 				ragdollBone.jointData.minAngle = param->asFlt();
+				ragdollActorData.jointData.minAngle = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("JointSwing"))
 			{
 				ragdollBone.jointData.swing = param->asFlt();
+				ragdollActorData.jointData.swing = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("JointTwist"))
 			{
 				ragdollBone.jointData.twist = param->asFlt();
+				ragdollActorData.jointData.twist = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("JointType"))
 			{
 				ragdollBone.jointData.type = static_cast<JOINT_ENUM>(param->asInt());
+				ragdollActorData.jointData.type = static_cast<JOINT_ENUM>(param->asInt());
 			}
 			if (XmlParam* param = node->findParam("ActorADamping"))
 			{
 				ragdollBone.actor.adamping(param->asFlt());
+				ragdollActorData.angularDamping = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("ActorDamping"))
 			{
 				ragdollBone.actor.damping(param->asFlt());
+				ragdollActorData.damping = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("ActorSleepEnergy"))
 			{
 				ragdollBone.actor.sleepEnergy(param->asFlt());
+				ragdollActorData.sleepEnergy = param->asFlt();
 			}
 			if (i > 0)
 				player.ragdoll.recreateJoint(i);
+			_ragdollBones.add(ragdollActorData);
 		}
 	}
 

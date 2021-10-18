@@ -122,7 +122,7 @@ bool Init()
 	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
 	dummyDataNoBoneSelected();
-
+	RagdollData::GetDefaultRagdollData();
 	return true;
 }
 

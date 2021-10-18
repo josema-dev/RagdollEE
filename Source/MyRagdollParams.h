@@ -41,6 +41,10 @@ class RagdollData
 public:
     bool SaveRagdollData(Ptr user, const Player& player) const;
     bool LoadRagdollData(Ptr user, Player& player);
+    const RagdollActorData* RagdollBone(EE::Str name) const;
+    static Mems<RagdollActorData> GetDefaultRagdollData();
+    //RagdollActorData* RagdollBone(EE::Str name);
+
 protected:
 private:
     Mems<RagdollActorData > _ragdollBones;

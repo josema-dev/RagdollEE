@@ -4,6 +4,75 @@
 #include "MyRagdoll.h"
 
 #include "Player.h"
+Mems<RagdollActorData> RagdollData::LoadRagdollData()
+{
+	Mems<RagdollActorData> ragdollData;
+	RagdollActorData ragdollActorData;
+	XmlData xml;
+	xml.load("ragdoll_params.txt"); // load from file
+	for (int i = 0; i < xml.nodes.elms(); i++)
+	{
+		if (XmlParam* param = xml.nodes[i].findParam("Name"))
+		{
+			Set(ragdollActorData.name, param->asText());
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxParent"))
+		{
+			ragdollActorData.ragdollBoneParentIdx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxSkelBone"))
+		{
+			ragdollActorData.skelBoneIdx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointAnchor"))
+		{
+			ragdollActorData.jointData.anchor = param->asVec();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointAxis"))
+		{
+			ragdollActorData.jointData.axis = param->asVec();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxJoint"))
+		{
+			ragdollActorData.jointData.idx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointMaxAngle"))
+		{
+			ragdollActorData.jointData.maxAngle = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointMinAngle"))
+		{
+			ragdollActorData.jointData.minAngle = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointSwing"))
+		{
+			ragdollActorData.jointData.swing = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointTwist"))
+		{
+			ragdollActorData.jointData.twist = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointType"))
+		{
+			ragdollActorData.jointData.type = static_cast<JOINT_ENUM>(param->asInt());
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorADamping"))
+		{
+			ragdollActorData.angularDamping = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorDamping"))
+		{
+			ragdollActorData.damping = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorSleepEnergy"))
+		{
+			ragdollActorData.sleepEnergy = param->asFlt();
+		}
+		ragdollData.add(ragdollActorData);
+	}
+
+	return ragdollData;
+}
 
 bool RagdollData::SaveRagdollData(Ptr user, const Player& player) const
 {
@@ -74,6 +143,7 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 			if (XmlParam* param = node->findParam("JointMaxAngle"))
 			{
 				ragdollBone.jointData.maxAngle = param->asFlt();
+				ragdollActorData.jointData.maxAngle = param->asFlt();
 			}
 			if (XmlParam* param = node->findParam("JointMinAngle"))
 			{
@@ -119,24 +189,25 @@ bool RagdollData::LoadRagdollData(Ptr user, Player& player)
 	return true;
 }
 
-const RagdollActorData* RagdollData::RagdollBone(EE::Str name) const
+const RagdollActorData& RagdollData::RagdollBone(EE::Str name) const
 {
 	for(int i=0; i<_ragdollBones.elms(); i++)
 	{
 		if (_ragdollBones[i].name == name)
-			return &_ragdollBones[i];
+			return _ragdollBones[i];
 	}
-	return null;
+	throw std::invalid_argument("Wrong bone name!");
 }
-//RagdollActorData* RagdollData::RagdollBone(EE::Str name)
-//{
-//	for (int i = 0; i < _ragdollBones.elms(); i++)
-//	{
-//		if (_ragdollBones[i].name == name)
-//			return &_ragdollBones[i];
-//	}
-//	return null;
-//}
+
+RagdollActorData& RagdollData::RagdollBone(EE::Str name)
+{
+	for (int i = 0; i < _ragdollBones.elms(); i++)
+	{
+		if (_ragdollBones[i].name == name)
+			return _ragdollBones[i];
+	}
+	throw std::invalid_argument("Wrong bone name!");
+}
 
 Mems<RagdollActorData> RagdollData::GetDefaultRagdollData()
 {

@@ -22,8 +22,10 @@ class MyRagdoll
 
     // manage
     MyRagdoll& del(); // delete
+    MyRagdoll& create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false);
     MyRagdoll& create(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false); // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), Exit  on fail
     Bool     createTry(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false); // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), false on fail
+    Bool     createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdolData, Flt scale = 1, Flt density = 1, Bool kinematic = false);
 
     // operations
     MyRagdoll& fromSkel(C AnimatedSkeleton& anim_skel, C Vec& vel = VecZero, Bool immediate_even_for_kinematic_ragdoll = false); // set   ragdoll  from skeleton          , 'anim_skel' must have its matrixes updated, 'anim_skel' must be set to the same skeleton which ragdoll was created from, setting ragdoll bone matrixes is done using 'Actor::kinematicMoveTo' for kinematic ragdolls and 'Actor::matrix' for non kinematic ragdolls, however since 'Actor::kinematicMoveTo' doesn't set the matrixes immediately, you can set 'immediate_even_for_kinematic_ragdoll' to true, which will force setting the bone matrixes immediately using 'Actor::matrix' method.
@@ -84,6 +86,7 @@ class MyRagdoll
 
     //#if !EE_PRIVATE
 private:
+    void createJoint(Actor& rb, Actor& rbp, const JointData& rad);
     //#endif
     Flt         _scale;
     C Skeleton* _skel;

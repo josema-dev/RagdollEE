@@ -41,9 +41,12 @@ class RagdollData
 public:
     bool SaveRagdollData(Ptr user, const Player& player) const;
     bool LoadRagdollData(Ptr user, Player& player);
-    const RagdollActorData* RagdollBone(EE::Str name) const;
+    const RagdollActorData& RagdollBone(EE::Str name) const;
+    RagdollActorData& RagdollBone(EE::Str name);
     static Mems<RagdollActorData> GetDefaultRagdollData();
-    //RagdollActorData* RagdollBone(EE::Str name);
+    const Flt& Density() { return _density; }
+    RagdollData& Density(Flt density) { _density = density; }
+    static Mems<RagdollActorData> LoadRagdollData();
 
 protected:
 private:

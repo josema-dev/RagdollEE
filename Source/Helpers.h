@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __HELPERS_H__
+#define __HELPERS_H__
 
 #include "stdafx.h"
 #include "@@headers.h"
@@ -32,3 +33,5 @@ enum ACTOR_GROUPS // actor groups (for example in the game you can specify follo
 	GROUP_BACKGROUND, // background
 	GROUP_OBJ, // objects
 };
+
+#endif //__HELPERS_H__

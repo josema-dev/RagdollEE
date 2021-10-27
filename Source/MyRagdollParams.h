@@ -3,6 +3,9 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
+
+class Player;
+
 enum class JOINT_ENUM
 {
     JOINT_NO = -1,
@@ -26,13 +29,30 @@ struct RagdollActorData
 {
     Char8 name[32]; // name
     JointData jointData;
+    Byte ragdollBoneParentIdx;
+    Byte skelBoneIdx;
+    Flt angularDamping;
+    Flt damping;
+    Flt sleepEnergy;
 };
 
 class RagdollData
 {
 public:
+    RagdollData();
+    RagdollData(Flt density);
+    RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones);
+    bool SaveRagdollData(Ptr user, const Player& player) const;
+    bool LoadRagdollData(Ptr user, Player& player);
+    const RagdollActorData& RagdollBone(EE::Str name) const;
+    RagdollActorData& RagdollBone(EE::Str name);
+    static Mems<RagdollActorData> GetDefaultRagdollData();
+    const Flt& Density() { return _density; }
+    RagdollData& Density(Flt density) { _density = density; }
+    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
+
 protected:
 private:
-    Mems<RagdollActorData > _ragdollBones;
     Flt _density;
+    Mems<RagdollActorData> _ragdollBones;
 };

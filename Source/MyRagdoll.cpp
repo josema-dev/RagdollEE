@@ -1,8 +1,7 @@
-/******************************************************************************/
 #include "stdafx.h"
 #include "Player.h"
 #include "Helpers.h"
-/******************************************************************************/
+
 static Shape ShapeBone(C Vec& from, C Vec& to, Flt width)
 {
     Shape shape;
@@ -27,7 +26,7 @@ static Shape ShapeBone(C Vec& from, C Vec& to, Flt width)
     return shape;
 }
 inline static Shape ShapeBone(C SkelBone& bone) { return ShapeBone(bone.pos, bone.to(), bone.width); } // return shape from bone
-/******************************************************************************/
+
 void MyRagdoll::zero()
 {
     _scale = 0;
@@ -332,10 +331,154 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
     }
     return false;
 }
+
+Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
+{
+    del();
+
+    if (T._skel = anim_skel.skeleton())
+    {
+        T._scale = scale;
+
+        Memt<Shape> shapes;
+        C Skeleton& skel = *anim_skel.skeleton();
+        Int         body = -1;
+        FREPA(skel.bones) // order is important, main bones should be added at start, in case the skeleton doesn't have "body" bone, and as main bone (zero) should be set some different
+        {
+            C SkelBone& skelBone = skel.bones[i];
+            if (skelBone.flag & BONE_RAGDOLL)
+            {
+                Vec posBone = skelBone.pos,
+                    posBoneEnd = skelBone.to();
+                Flt widthBone = skelBone.width;
+
+                if (skelBone.type == BONE_FOOT)
+                {
+                    C SkelBone* b = skel.findBone(BONE_TOE, skelBone.type_index);
+                    if (b)
+                    {
+                        posBone = Avg(skelBone.pos, skelBone.to());
+                        posBoneEnd = b->to();
+                        widthBone = Avg(widthBone, b->width) * 0.5f;
+                        Vec down = skelBone.dir * (widthBone * Dist(posBone, posBoneEnd) * 0.5f);
+                        posBone -= down; posBoneEnd -= down;
+                    }
+                    else
+                        widthBone *= 0.8f;
+                }
+                else
+                {
+                    if (skelBone.type == BONE_HAND)
+                    {
+                        C SkelBone* b = skel.findBone(BONE_FINGER, (skelBone.type_index >= 0) ? 2 : -3); // find middle finger (2 for right, -3 for left hand)
+                        if (b)
+                        {
+                            posBoneEnd = b->to();
+                            widthBone *= 0.6f;
+                        }
+                    }
+                    else
+                    {
+                        if (skelBone.type == BONE_SPINE && skelBone.type_sub == 0)
+                        {
+                            body = _bones.elms();
+                            _resets.add(i); // add main bone for resetting
+                        }
+                    }
+                }
+                Shape& shapeBone = shapes.New();
+                shapeBone = ShapeBone(posBone, posBoneEnd, widthBone);
+                Bone& ragdollBone = _bones.New();
+                Set(ragdollBone.name, skelBone.name);
+                ragdollBone.skel_bone = i;
+                ragdollBone.rbon_parent = 0xFF;
+                if (!ragdollBone.actor.createTry(shapeBone * T._scale, density, &VecZero, kinematic))
+                    return false;
+            }
+            else
+            {
+                _resets.add(i);
+            }
+        }
+
+        // force 'body' bone to have index=0
+        if (body > 0)
+        {
+            Swap(_bones[0], _bones[body]);
+            Swap(shapes[0], shapes[body]);
+        }
+
+        // set parents, damping and solver iterations
+        REPA(T)
+        {
+            // find first parent which has an actor
+            Bone& rb = bone(i);
+            C SkelBone& sb = skel.bones[rb.skel_bone];
+            if (i) // skip the main bone
+            {
+                Byte skel_bone_parent = sb.parent;
+                if (skel_bone_parent != 0xFF) // if has a parent
+                {
+                    Int rbone = findBoneIndexFromSkelBone(skel_bone_parent); // find ragdoll bone assigned to skeleton parent bone
+                    if (rbone >= 0)rb.rbon_parent = rbone;                      // if exists, then set as ragdoll parent
+                }
+            }
+
+            const RagdollActorData& rad = ragdollData.RagdollBone(sb.name);
+            rb.actor.adamping(rad.angularDamping);
+            rb.actor.damping(rad.damping);
+            rb.actor.sleepEnergy(rad.sleepEnergy);
+            rb.actor.group(GROUP_OBJ);
+            rb.actor.user(ptr(i));
+        }
+
+        if (!kinematic)
+        {
+            // joints
+            REPA(_bones)
+                if (i) // skip the main bone
+                {
+                    Bone& ragdollBone = bone(i);
+                    C SkelBone& skelBone = skel.bones[ragdollBone.skel_bone];
+                    Byte rbon_parent = ((ragdollBone.rbon_parent == 0xFF) ? 0 : ragdollBone.rbon_parent); // if doesn't have a parent then use the main bone
+
+                  //if(rbon_parent!=0xFF)
+                    {
+                        Bone& ragdollBoneParent = _bones[rbon_parent];
+                        C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
+                        const RagdollActorData& rad = ragdollData.RagdollBone(skelBone.name);
+                        createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad.jointData);
+                    }
+                }
+
+            // ignore
+            REPA(T)
+                REPD(j, i)
+                if (Cuts(shapes[i], shapes[j]))
+                    bone(i).actor.ignore(bone(j).actor);
+        }
+        //_aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
+        return true;
+    }
+    return false;
+}
 /******************************************************************************/
 MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, Flt scale, Flt density, Bool kinematic)
 {
     if (!createTry(anim_skel, scale, density, kinematic))Exit("Can't create Ragdoll");
+    return T;
+}
+
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
+{
+    if (!createTry(anim_skel, ragdollData, scale, density, kinematic))Exit("Can't create Ragdoll");
+    return T;
+}
+
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale, Flt density, Bool kinematic)
+{
+    const Mems<RagdollActorData> ragdollActorData = RagdollData::LoadRagdollData(fileName);
+    if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
 /******************************************************************************
@@ -705,5 +848,25 @@ void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
         int twistSign = jointData.maxAngle >= 0 ? 1 : -1;
         _joints[jointData.idx].createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, _skel->bones[ragdollBone.skel_bone].pos * _scale,
             _skel->bones[ragdollBone.skel_bone].dir, swingSign * DegToRad(jointData.swing), twistSign * DegToRad(jointData.twist));
+    }
+}
+
+void MyRagdoll::createJoint(Actor &rb, Actor &rbp, const JointData& jointData)
+{
+    switch (jointData.type)
+    {
+    case JOINT_ENUM::JOINT_BODY_HINGE:
+        {
+            _joints.New().createBodyHinge(rb, rbp, jointData.anchor, jointData.axis, jointData.minAngle, jointData.maxAngle);
+            break;
+        }
+    case JOINT_ENUM::JOINT_BODY_SPHERICAL:
+        {
+            _joints.New().createBodySpherical(rb, rbp, jointData.anchor, jointData.axis, jointData.swing, jointData.twist);
+            break;
+        }
+    case JOINT_ENUM::JOINT_NO:
+    default:
+        return;
     }
 }

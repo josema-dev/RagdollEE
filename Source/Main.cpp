@@ -16,6 +16,7 @@ ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
 bool resetRagdoll = false;
+RagdollData ragdollData;
 
 void dummyDataNoBoneSelected()
 {
@@ -55,108 +56,6 @@ void paramChanged(C EE::Property& prop)
 	parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
 }
 
-void saveParams(Ptr user)
-{
-	updatePlayerRagdollParams();
-	XmlData xml;
-	for (int i = 0; i < player.ragdoll.bones(); i++)
-	{
-		MyRagdoll::Bone& ragdollBone = player.ragdoll.bone(i);
-		XmlNode& node = xml.getNode(ragdollBone.name);
-		node.params.New().set("Idx", i);
-		node.params.New().set("Name", ragdollBone.name);
-		node.params.New().set("IdxParent", ragdollBone.rbon_parent);
-		node.params.New().set("IdxSkelBone", ragdollBone.skel_bone);
-		node.params.New().set("JointAnchor", ragdollBone.jointData.anchor);
-		node.params.New().set("JointAxis", ragdollBone.jointData.axis);
-		node.params.New().set("IdxJoint", ragdollBone.jointData.idx);
-		node.params.New().set("JointMaxAngle", ragdollBone.jointData.maxAngle);
-		node.params.New().set("JointMinAngle", ragdollBone.jointData.minAngle);
-		node.params.New().set("JointSwing", ragdollBone.jointData.swing);
-		node.params.New().set("JointTwist", ragdollBone.jointData.twist);
-		node.params.New().set("JointType", static_cast<int>(ragdollBone.jointData.type));
-		node.params.New().set("ActorADamping", ragdollBone.actor.adamping());
-		node.params.New().set("ActorDamping", ragdollBone.actor.damping());
-		node.params.New().set("ActorSleepEnergy", ragdollBone.actor.sleepEnergy());
-	}
-	xml.save("ragdoll_params.txt");
-}
-void loadParams(Ptr user)
-{
-	if (ActiveBoneIdx != -1)
-		return;
-	XmlData xml;
-	xml.load("ragdoll_params.txt"); // load from file
-	/*Mems<MyRagdoll::Bone> bones;
-	bones.setNum(player.ragdoll.bones());*/
-
-	for (int i = 0; i < player.ragdoll.bones(); i++)
-	{
-		MyRagdoll::Bone& ragdollBone = player.ragdoll.bone(i);
-		if (XmlNode* node = xml.findNode(ragdollBone.name))
-		{
-			if (XmlParam* param = node->findParam("Name"))
-			{
-				Set(ragdollBone.name, param->asText());
-			}
-			if (XmlParam* param = node->findParam("IdxParent"))
-			{
-				ragdollBone.rbon_parent = param->asInt();
-			}
-			if (XmlParam* param = node->findParam("IdxSkelBone"))
-			{
-				ragdollBone.skel_bone = param->asInt();
-			}
-			if (XmlParam* param = node->findParam("JointAnchor"))
-			{
-				ragdollBone.jointData.anchor = param->asVec();
-			}
-			if (XmlParam* param = node->findParam("JointAxis"))
-			{
-				ragdollBone.jointData.axis = param->asVec();
-			}
-			if (XmlParam* param = node->findParam("IdxJoint"))
-			{
-				ragdollBone.jointData.idx = param->asInt();
-			}
-			if (XmlParam* param = node->findParam("JointMaxAngle"))
-			{
-				ragdollBone.jointData.maxAngle= param->asFlt();
-			}
-			if (XmlParam* param = node->findParam("JointMinAngle"))
-			{
-				ragdollBone.jointData.minAngle = param->asFlt();
-			}
-			if (XmlParam* param = node->findParam("JointSwing"))
-			{
-				ragdollBone.jointData.swing = param->asFlt();
-			}
-			if (XmlParam* param = node->findParam("JointTwist"))
-			{
-				ragdollBone.jointData.twist = param->asFlt();
-			}
-			if (XmlParam* param = node->findParam("JointType"))
-			{
-				ragdollBone.jointData.type = static_cast<JOINT_ENUM>(param->asInt());
-			}
-			if (XmlParam* param = node->findParam("ActorADamping"))
-			{
-				ragdollBone.actor.adamping(param->asFlt());
-			}
-			if (XmlParam* param = node->findParam("ActorDamping"))
-			{
-				ragdollBone.actor.damping(param->asFlt());
-			}
-			if (XmlParam* param = node->findParam("JointTwist"))
-			{
-				ragdollBone.actor.sleepEnergy(param->asFlt());
-			}
-			if(i > 0)
-				player.ragdoll.recreateJoint(i);
-		}
-	}
-}
-
 void simulationStart(Ptr usr)
 {
 	updatePlayerRagdollParams();
@@ -173,6 +72,20 @@ void disableRagdollDraw(Ptr usr)
 	else
 		player.ragdoll.ray(true);
 }
+
+void saveParams(Ptr usr)
+{
+	updatePlayerRagdollParams();
+	ragdollData.SaveRagdollData(usr, player);
+}
+
+void loadParams(Ptr usr)
+{
+	if (ActiveBoneIdx != -1)
+		return;
+	ragdollData.LoadRagdollData(usr, player);
+}
+
 void InitPre()
 {
 	EE_INIT();
@@ -209,7 +122,7 @@ bool Init()
 	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
 	dummyDataNoBoneSelected();
-
+	RagdollData::GetDefaultRagdollData();
 	return true;
 }
 

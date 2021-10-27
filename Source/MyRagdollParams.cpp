@@ -4,7 +4,7 @@
 #include "MyRagdoll.h"
 
 #include "Player.h"
-Mems<RagdollActorData> RagdollData::LoadRagdollData()
+Mems<RagdollActorData> RagdollData::LoadRagdollData(const EE::Str &fileName)
 {
 	Mems<RagdollActorData> ragdollData;
 	RagdollActorData ragdollActorData;
@@ -73,6 +73,10 @@ Mems<RagdollActorData> RagdollData::LoadRagdollData()
 
 	return ragdollData;
 }
+
+RagdollData::RagdollData() : _density{ 1.0f } {}
+RagdollData::RagdollData(Flt density) : _density { density } {}
+RagdollData::RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones) : _density{ density }, _ragdollBones{ ragdollBones }{}
 
 bool RagdollData::SaveRagdollData(Ptr user, const Player& player) const
 {

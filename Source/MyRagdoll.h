@@ -23,6 +23,7 @@ class MyRagdoll
     // manage
     MyRagdoll& del(); // delete
     MyRagdoll& create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false);
+    MyRagdoll& create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale = 1, Flt density = 1, Bool kinematic = false);
     MyRagdoll& create(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false); // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), Exit  on fail
     Bool     createTry(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false); // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), false on fail
     Bool     createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdolData, Flt scale = 1, Flt density = 1, Bool kinematic = false);

@@ -39,6 +39,9 @@ struct RagdollActorData
 class RagdollData
 {
 public:
+    RagdollData();
+    RagdollData(Flt density);
+    RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones);
     bool SaveRagdollData(Ptr user, const Player& player) const;
     bool LoadRagdollData(Ptr user, Player& player);
     const RagdollActorData& RagdollBone(EE::Str name) const;
@@ -46,10 +49,10 @@ public:
     static Mems<RagdollActorData> GetDefaultRagdollData();
     const Flt& Density() { return _density; }
     RagdollData& Density(Flt density) { _density = density; }
-    static Mems<RagdollActorData> LoadRagdollData();
+    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
 
 protected:
 private:
-    Mems<RagdollActorData > _ragdollBones;
     Flt _density;
+    Mems<RagdollActorData> _ragdollBones;
 };

@@ -474,6 +474,13 @@ MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const RagdollData& r
     if (!createTry(anim_skel, ragdollData, scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
+
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale, Flt density, Bool kinematic)
+{
+    const Mems<RagdollActorData> ragdollActorData = RagdollData::LoadRagdollData(fileName);
+    if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
+    return T;
+}
 /******************************************************************************
 void updateShapes(AnimatedSkeleton &anim_skel); // update 'shape_t' according to 'shape' and skeleton animation, 'anim_skel' must be set to the same skeleton which ragdoll was created from
 void Ragdoll::updateShape(AnimatedSkeleton &anim_skel)

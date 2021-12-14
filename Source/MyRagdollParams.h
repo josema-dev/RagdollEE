@@ -42,17 +42,24 @@ public:
     RagdollData();
     RagdollData(Flt density);
     RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones);
-    bool SaveRagdollData(Ptr user, const Player& player) const;
-    bool LoadRagdollData(Ptr user, Player& player);
+    
+    //bool Load(const EE::Str& fileName);
     const RagdollActorData& RagdollBone(EE::Str name) const;
     RagdollActorData& RagdollBone(EE::Str name);
-    static Mems<RagdollActorData> GetDefaultRagdollData();
     const Flt& Density() { return _density; }
     RagdollData& Density(Flt density) { _density = density; }
-    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
 
 protected:
 private:
     Flt _density;
     Mems<RagdollActorData> _ragdollBones;
+    friend class RagdollDataHelpers;
+};
+
+class RagdollDataHelpers
+{
+public:
+    static bool SaveRagdollData(const EE::Str& fileName, const RagdollData &ragdollData);
+    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
+    static Mems<RagdollActorData> GetDefaultRagdollData();
 };

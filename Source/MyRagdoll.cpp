@@ -31,6 +31,7 @@ void MyRagdoll::zero()
 {
     _scale = 0;
     _skel = null;
+    _ragdollData = nullptr;
 }
 
 MyRagdoll::MyRagdoll() { zero(); }
@@ -447,6 +448,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                         Bone& ragdollBoneParent = _bones[rbon_parent];
                         C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
                         const RagdollActorData& rad = ragdollData.RagdollBone(skelBone.name);
+                        ragdollBone.jointData = rad.jointData;
                         createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad.jointData);
                     }
                 }
@@ -477,7 +479,7 @@ MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const RagdollData& r
 
 MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale, Flt density, Bool kinematic)
 {
-    const Mems<RagdollActorData> ragdollActorData = RagdollData::LoadRagdollData(fileName);
+    const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
     if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
@@ -827,7 +829,7 @@ Bool MyRagdoll::loadState(File& f) // don't delete on fail, as here we're loadin
     }
     return false;
 }
-
+#if RAGDOLL_EDITOR
 void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
 {
     if (ragdollBoneIdx == 0)
@@ -844,11 +846,31 @@ void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
     }
     else if (jointData.type == JOINT_ENUM::JOINT_BODY_SPHERICAL)
     {
-        int swingSign = jointData.minAngle >= 0 ? 1 : -1;
-        int twistSign = jointData.maxAngle >= 0 ? 1 : -1;
+        int swingSign = jointData.swing >= 0 ? 1 : -1;
+        int twistSign = jointData.twist >= 0 ? 1 : -1;
         _joints[jointData.idx].createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, _skel->bones[ragdollBone.skel_bone].pos * _scale,
             _skel->bones[ragdollBone.skel_bone].dir, swingSign * DegToRad(jointData.swing), twistSign * DegToRad(jointData.twist));
     }
+}
+#endif
+
+Mems<RagdollActorData> MyRagdoll::GetRagdollData()
+{
+    Mems<RagdollActorData> ragdollActorsData;
+    for (int i = 0; i < _bones.elms(); i++)
+    {
+        const Bone &rb = _bones[i];
+        RagdollActorData rad;
+        rad.damping = rb.actor.damping();
+        rad.angularDamping = rb.actor.adamping();
+        rad.sleepEnergy = rb.actor.sleepEnergy();
+        Set(rad.name, rb.name);
+        rad.ragdollBoneParentIdx = rb.rbon_parent;
+        rad.skelBoneIdx = rb.skel_bone;
+        rad.jointData = rb.jointData;
+        ragdollActorsData.add(rad);
+    }
+    return ragdollActorsData;
 }
 
 void MyRagdoll::createJoint(Actor &rb, Actor &rbp, const JointData& jointData)
@@ -857,12 +879,16 @@ void MyRagdoll::createJoint(Actor &rb, Actor &rbp, const JointData& jointData)
     {
     case JOINT_ENUM::JOINT_BODY_HINGE:
         {
-            _joints.New().createBodyHinge(rb, rbp, jointData.anchor, jointData.axis, jointData.minAngle, jointData.maxAngle);
+        int minAngleSign = jointData.minAngle >= 0 ? 1 : -1;
+        int maxAngleSign = jointData.maxAngle >= 0 ? 1 : -1;
+            _joints.New().createBodyHinge(rb, rbp, jointData.anchor, jointData.axis, DegToRad(jointData.minAngle), DegToRad(jointData.maxAngle));
             break;
         }
     case JOINT_ENUM::JOINT_BODY_SPHERICAL:
         {
-            _joints.New().createBodySpherical(rb, rbp, jointData.anchor, jointData.axis, jointData.swing, jointData.twist);
+        int swingSign = jointData.swing >= 0 ? 1 : -1;
+        int twistSign = jointData.twist >= 0 ? 1 : -1;
+            _joints.New().createBodySpherical(rb, rbp, jointData.anchor, jointData.axis, DegToRad(jointData.swing), DegToRad(jointData.twist));
             break;
         }
     case JOINT_ENUM::JOINT_NO:

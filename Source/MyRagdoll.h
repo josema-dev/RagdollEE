@@ -67,8 +67,10 @@ class MyRagdoll
 
     Int findBoneIndexFromSkelBone(Byte skel_bone_index)C; // find ragdoll bone index, from skeleton bone index, -1 on fail
     Int findBoneIndexFromVtxMatrix(Byte    matrix_index)C; // find ragdoll bone index, from vertex matrix index, -1 on fail
-
+#if RAGDOLL_EDITOR
     void recreateJoint(const Int ragdollBoneIdx);
+#endif
+    Mems<RagdollActorData> GetRagdollData();
     // draw
     void draw(C Color& color = WHITE)C; // this can be optionally called outside of Render function
     void draw(C Color& color, C Color& colorSpecial, C Int idx = -1)C; // this can be optionally called outside of Render function
@@ -95,6 +97,7 @@ private:
     Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
     Memc<Joint> _joints;
     Aggregate   _aggr;
+    RagdollData *_ragdollData;
 };
 /******************************************************************************/
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }

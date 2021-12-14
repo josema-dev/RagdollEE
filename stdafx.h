@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #ifndef _ALLOW_RTCc_IN_STL
-#define _ALLOW_RTCc_IN_STL 1
+#define _ALLOW_RTCc_IN_STL
 #endif /* _ALLOW_RTCc_IN_STL */
 
 #include "E:/Esenthel/Engine/Esenthel/Bin/EsenthelEngine/_/System/begin.h"

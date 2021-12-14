@@ -5,6 +5,8 @@
 #include "Helpers.h"
 #include "ParamWindow.h"
 
+static const EE::Str ragdollParamsFileName = "ragdoll_params.txt";
+
 Player player;
 Actor ground;
 Bool physicsEnabled = false;
@@ -16,7 +18,7 @@ ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
 bool resetRagdoll = false;
-RagdollData ragdollData;
+//RagdollData ragdollData;
 
 void dummyDataNoBoneSelected()
 {
@@ -76,14 +78,18 @@ void disableRagdollDraw(Ptr usr)
 void saveParams(Ptr usr)
 {
 	updatePlayerRagdollParams();
-	ragdollData.SaveRagdollData(usr, player);
+	Mems<RagdollActorData> ragdollData = player.ragdoll.GetRagdollData();
+	RagdollDataHelpers::SaveRagdollData(ragdollParamsFileName, RagdollData(1000, ragdollData));
 }
 
 void loadParams(Ptr usr)
 {
 	if (ActiveBoneIdx != -1)
 		return;
-	ragdollData.LoadRagdollData(usr, player);
+	
+	Mems<RagdollActorData> ragdoll = RagdollDataHelpers::LoadRagdollData(ragdollParamsFileName);
+	RagdollData ragdollData(1000, ragdoll);
+	player.ragdoll.create(player.skel, ragdollData, player.scale, ragdollData.Density());
 }
 
 void InitPre()
@@ -122,7 +128,7 @@ bool Init()
 	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
 	parWindow.create();
 	dummyDataNoBoneSelected();
-	RagdollData::GetDefaultRagdollData();
+	RagdollDataHelpers::GetDefaultRagdollData();
 	return true;
 }
 

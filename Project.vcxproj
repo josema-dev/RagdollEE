@@ -1069,6 +1069,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX11|Emscripten'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Universal DX11|Emscripten'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="Source\DensityWindow.h" />
     <ClInclude Include="Source\Helpers.h" />
     <ClInclude Include="Source\MyRagdoll.h" />
     <ClInclude Include="Source\MyRagdollParams.h" />

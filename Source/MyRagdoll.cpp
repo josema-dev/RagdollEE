@@ -48,6 +48,7 @@ MyRagdoll& MyRagdoll::del()
 Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density, Bool kinematic)
 {
     del();
+    _density = density;
 
     if (T._skel = anim_skel.skeleton())
     {
@@ -105,7 +106,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                 Set(ragdollBone.name, skelBone.name);
                 ragdollBone.skel_bone = i;
                 ragdollBone.rbon_parent = 0xFF;
-                if (!ragdollBone.actor.createTry(shapeBone * T._scale, density, &VecZero, kinematic))
+                if (!ragdollBone.actor.createTry(shapeBone * T._scale, _density, &VecZero, kinematic))
                     return false;
             }
             else
@@ -337,6 +338,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
 {
     del();
 
+    _density = density;
+
     if (T._skel = anim_skel.skeleton())
     {
         T._scale = scale;
@@ -393,7 +396,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                 Set(ragdollBone.name, skelBone.name);
                 ragdollBone.skel_bone = i;
                 ragdollBone.rbon_parent = 0xFF;
-                if (!ragdollBone.actor.createTry(shapeBone * T._scale, density, &VecZero, kinematic))
+                if (!ragdollBone.actor.createTry(shapeBone * T._scale, _density, &VecZero, kinematic))
                     return false;
             }
             else

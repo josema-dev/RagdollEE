@@ -61,5 +61,6 @@ class RagdollDataHelpers
 public:
     static bool SaveRagdollData(const EE::Str& fileName, const RagdollData &ragdollData);
     static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
+    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName, Flt& densityOut);
     static Mems<RagdollActorData> GetDefaultRagdollData();
 };

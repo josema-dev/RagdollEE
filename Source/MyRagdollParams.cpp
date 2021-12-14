@@ -56,6 +56,13 @@ Mems<RagdollActorData> RagdollDataHelpers::GetDefaultRagdollData()
 
 Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileName)
 {
+	Flt densityOut = 1000.0f;
+	return LoadRagdollData(fileName, densityOut);
+}
+
+Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileName, Flt& densityOut)
+{
+	densityOut = 1000.0f;
 	Mems<RagdollActorData> ragdollData;
 	RagdollActorData ragdollActorData;
 	XmlData xml;
@@ -118,6 +125,10 @@ Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileNa
 		{
 			ragdollActorData.sleepEnergy = param->asFlt();
 		}
+		if (XmlParam* param = xml.nodes[i].findParam("Density"))
+		{
+			densityOut = param->asFlt();
+		}
 		ragdollData.add(ragdollActorData);
 	}
 
@@ -127,6 +138,8 @@ Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileNa
 bool RagdollDataHelpers::SaveRagdollData(const EE::Str& fileName, const RagdollData& ragdollData)
 {
 	XmlData xml;
+	XmlNode& node = xml.getNode("SkelParams");
+	node.params.New().set("Density", ragdollData._density);
 	for (int i = 0; i < ragdollData._ragdollBones.elms(); i++)
 	{
 		const RagdollActorData& ragdollBone = ragdollData._ragdollBones[i];

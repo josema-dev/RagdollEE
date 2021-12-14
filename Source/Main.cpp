@@ -86,9 +86,9 @@ void loadParams(Ptr usr)
 {
 	if (ActiveBoneIdx != -1)
 		return;
-	
-	Mems<RagdollActorData> ragdoll = RagdollDataHelpers::LoadRagdollData(ragdollParamsFileName);
-	RagdollData ragdollData(1000, ragdoll);
+	Flt density = 1000;
+	Mems<RagdollActorData> ragdoll = RagdollDataHelpers::LoadRagdollData(ragdollParamsFileName, density);
+	RagdollData ragdollData(density, ragdoll);
 	player.ragdoll.create(player.skel, ragdollData, player.scale, ragdollData.Density());
 }
 

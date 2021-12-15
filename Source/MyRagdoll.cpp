@@ -169,8 +169,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 30;
                                 ragdollBone.jointData.maxAngle = 35;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(30), DegToRad(35));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else
                             {
@@ -180,8 +180,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 50;
                                 ragdollBone.jointData.maxAngle = 40;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(50), DegToRad(40));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                         }
                         else
@@ -194,8 +194,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 20;
                                 ragdollBone.jointData.maxAngle = 5;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(20), DegToRad(5));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_SHOULDER)
                             {
@@ -205,8 +205,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.swing = 5;
                                 ragdollBone.jointData.twist = 5;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(5), DegToRad(5));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.swing), DegToRad(ragdollBone.jointData.twist));
                             }
                             else if (skelBone.type == BONE_UPPER_ARM)
                             {
@@ -216,8 +216,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.swing = 80;
                                 ragdollBone.jointData.twist = 30;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(80), DegToRad(30));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.swing), DegToRad(ragdollBone.jointData.twist));
                             }
                             else if (skelBone.type == BONE_UPPER_LEG)
                             {
@@ -227,8 +227,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.swing = 155;
                                 ragdollBone.jointData.twist = 25;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(155), DegToRad(25));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.swing), DegToRad(ragdollBone.jointData.twist));
                             }
                             else if (skelBone.type == BONE_SPINE)
                             {
@@ -238,8 +238,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.swing = 40;
                                 ragdollBone.jointData.twist = 30;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(40), DegToRad(30));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.swing), DegToRad(ragdollBone.jointData.twist));
                             }
                             else if (skelBone.type == BONE_FOOT)
                             {
@@ -249,8 +249,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = -45;
                                 ragdollBone.jointData.maxAngle = 45;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(1, 0, 0), -DegToRad(45), DegToRad(45));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_HAND && skelBone.type_index < 0)
                             {
@@ -260,8 +260,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = -80;
                                 ragdollBone.jointData.maxAngle = 80;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(0, 1, 0), -DegToRad(80), DegToRad(80));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_HAND && skelBone.type_index >= 0)
                             {
@@ -271,8 +271,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = -80;
                                 ragdollBone.jointData.maxAngle = 80;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(0, -1, 0), -DegToRad(80), DegToRad(80));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_LOWER_ARM && skelBone.type_index < 0)
                             {
@@ -282,8 +282,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 0;
                                 ragdollBone.jointData.maxAngle = 140;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(0, 1, 0), 0, DegToRad(140));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_LOWER_ARM && skelBone.type_index >= 0)
                             {
@@ -293,8 +293,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 0;
                                 ragdollBone.jointData.maxAngle = 140;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(0, -1, 0), 0, DegToRad(140));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else if (skelBone.type == BONE_LOWER_LEG)
                             {
@@ -304,8 +304,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.minAngle = 0;
                                 ragdollBone.jointData.maxAngle = 150;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, Vec(1, 0, 0), DegToRad(0), DegToRad(150));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.minAngle), DegToRad(ragdollBone.jointData.maxAngle));
                             }
                             else
                             {
@@ -315,8 +315,8 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                                 ragdollBone.jointData.swing = 40;
                                 ragdollBone.jointData.twist = 30;
                                 ragdollBone.jointData.idx = _joints.elms();
-                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, skelBone.pos * _scale, skelBone.dir, DegToRad(40), DegToRad(30));
-                                _joints.last().breakable(-1.0f, -1.0f);
+                                _joints.New().createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, ragdollBone.jointData.anchor,
+                                    ragdollBone.jointData.axis, DegToRad(ragdollBone.jointData.swing), DegToRad(ragdollBone.jointData.twist));
                             }
                         }
                     }
@@ -842,17 +842,15 @@ void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
     Bone& ragdollBoneParent = _bones[((ragdollBone.rbon_parent == 0xFF) ? 0 : ragdollBone.rbon_parent)];
     if (jointData.type == JOINT_ENUM::JOINT_BODY_HINGE)
     {
-        int minAngleSign = jointData.minAngle >= 0 ? 1 : -1;
-        int maxAngleSign = jointData.maxAngle >= 0 ? 1 : -1;
-        _joints[jointData.idx].createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, _skel->bones[ragdollBone.skel_bone].pos * _scale,
-            _skel->bones[ragdollBone.skel_bone].dir, minAngleSign * DegToRad(jointData.minAngle), maxAngleSign * DegToRad(jointData.maxAngle));
+        _joints[jointData.idx].del();
+        _joints[jointData.idx].createBodyHinge(ragdollBone.actor, ragdollBoneParent.actor, jointData.anchor,
+            jointData.axis, DegToRad(jointData.minAngle), DegToRad(jointData.maxAngle));
     }
     else if (jointData.type == JOINT_ENUM::JOINT_BODY_SPHERICAL)
     {
-        int swingSign = jointData.swing >= 0 ? 1 : -1;
-        int twistSign = jointData.twist >= 0 ? 1 : -1;
-        _joints[jointData.idx].createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, _skel->bones[ragdollBone.skel_bone].pos * _scale,
-            _skel->bones[ragdollBone.skel_bone].dir, swingSign * DegToRad(jointData.swing), twistSign * DegToRad(jointData.twist));
+        _joints[jointData.idx].del();
+        _joints[jointData.idx].createBodySpherical(ragdollBone.actor, ragdollBoneParent.actor, jointData.anchor,
+            jointData.axis, DegToRad(jointData.swing), DegToRad(jointData.twist));
     }
 }
 #endif
@@ -882,15 +880,11 @@ void MyRagdoll::createJoint(Actor &rb, Actor &rbp, const JointData& jointData)
     {
     case JOINT_ENUM::JOINT_BODY_HINGE:
         {
-        int minAngleSign = jointData.minAngle >= 0 ? 1 : -1;
-        int maxAngleSign = jointData.maxAngle >= 0 ? 1 : -1;
             _joints.New().createBodyHinge(rb, rbp, jointData.anchor, jointData.axis, DegToRad(jointData.minAngle), DegToRad(jointData.maxAngle));
             break;
         }
     case JOINT_ENUM::JOINT_BODY_SPHERICAL:
         {
-        int swingSign = jointData.swing >= 0 ? 1 : -1;
-        int twistSign = jointData.twist >= 0 ? 1 : -1;
             _joints.New().createBodySpherical(rb, rbp, jointData.anchor, jointData.axis, DegToRad(jointData.swing), DegToRad(jointData.twist));
             break;
         }

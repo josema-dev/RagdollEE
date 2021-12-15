@@ -67,6 +67,9 @@ class MyRagdoll
 
     Int findBoneIndexFromSkelBone(Byte skel_bone_index)C; // find ragdoll bone index, from skeleton bone index, -1 on fail
     Int findBoneIndexFromVtxMatrix(Byte    matrix_index)C; // find ragdoll bone index, from vertex matrix index, -1 on fail
+
+    Flt density()C { return _density; }
+    MyRagdoll& density(Flt density) { _density = density; return *this; }
 #if RAGDOLL_EDITOR
     void recreateJoint(const Int ragdollBoneIdx);
 #endif
@@ -98,6 +101,7 @@ private:
     Memc<Joint> _joints;
     Aggregate   _aggr;
     RagdollData *_ragdollData;
+    Flt _density;
 };
 /******************************************************************************/
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }

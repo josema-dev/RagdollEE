@@ -4,8 +4,10 @@
 #include "Player.h"
 #include "Helpers.h"
 #include "ParamWindow.h"
+#include "DensityWindow.h"
 
 static const EE::Str ragdollParamsFileName = "ragdoll_params.txt";
+static const Flt StartDensity = 5000;
 
 Player player;
 Actor ground;
@@ -13,12 +15,13 @@ Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
 Button b_physicsEnabled, b_meshDrawDisable,
-	b_ragdollDrawDisable, b_saveParams, b_loadParams;
+	b_ragdollDrawDisable, b_saveParams, b_loadParams,
+	b_updateDensity;
+DensityWindow updateDensityWindow{ StartDensity };
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
 bool resetRagdoll = false;
-//RagdollData ragdollData;
 
 void dummyDataNoBoneSelected()
 {
@@ -53,6 +56,17 @@ void updatePlayerRagdollParams()
 	player.ragdoll.recreateJoint(ActiveBoneIdx);
 }
 
+void UpdateSkelDensity(Flt density)
+{
+	if (ActiveBoneIdx != -1)
+		return;
+
+	updatePlayerRagdollParams();
+	Mems<RagdollActorData> ragdoll = player.ragdoll.GetRagdollData();
+	RagdollData ragdollData(density, ragdoll);
+	player.ragdoll.create(player.skel, ragdollData, player.scale, ragdollData.Density());
+}
+
 void paramChanged(C EE::Property& prop)
 {
 	parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
@@ -79,17 +93,23 @@ void saveParams(Ptr usr)
 {
 	updatePlayerRagdollParams();
 	Mems<RagdollActorData> ragdollData = player.ragdoll.GetRagdollData();
-	RagdollDataHelpers::SaveRagdollData(ragdollParamsFileName, RagdollData(1000, ragdollData));
+	RagdollDataHelpers::SaveRagdollData(ragdollParamsFileName, RagdollData(player.ragdoll.density(), ragdollData));
 }
 
 void loadParams(Ptr usr)
 {
 	if (ActiveBoneIdx != -1)
 		return;
-	
-	Mems<RagdollActorData> ragdoll = RagdollDataHelpers::LoadRagdollData(ragdollParamsFileName);
-	RagdollData ragdollData(1000, ragdoll);
+	Flt density = StartDensity;
+	Mems<RagdollActorData> ragdoll = RagdollDataHelpers::LoadRagdollData(ragdollParamsFileName, density);
+	RagdollData ragdollData(density, ragdoll);
 	player.ragdoll.create(player.skel, ragdollData, player.scale, ragdollData.Density());
+}
+
+void updateDensity(Ptr usr)
+{
+	updateDensityWindow.UpdateDensity(player.ragdoll.density());
+	updateDensityWindow.fadeIn();
 }
 
 void InitPre()
@@ -113,7 +133,7 @@ bool Init()
 	player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
 	player.pos(Vec(0, -1.5, 0));
 	player.ctrl.del();
-	player.ragdoll.create(player.skel, player.scale, 5000);
+	player.ragdoll.create(player.skel, player.scale, StartDensity);
 	player.ragdoll.ray(true);
 	
 	Cam.at = player.mesh()->ext.pos;
@@ -126,7 +146,12 @@ bool Init()
 	b_meshDrawDisable.mode = BUTTON_TOGGLE;
 	Gui += b_saveParams.create(Rect_C(0.9, 0.9, 0.55, 0.08), "Save Params").func(saveParams);
 	Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
+	Gui += b_updateDensity.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Update Density").func(updateDensity);
 	parWindow.create();
+
+	updateDensityWindow.create();
+	updateDensityWindow.SetUpdateFunc(UpdateSkelDensity);
+
 	dummyDataNoBoneSelected();
 	RagdollDataHelpers::GetDefaultRagdollData();
 	return true;
@@ -209,6 +234,7 @@ bool Update()
 			parWindow.updateData();
 			ActiveBoneIdx = lit;
 			b_loadParams.enabled(false);
+			b_updateDensity.enabled(false);
 			ParentBoneIdx = player.ragdoll.bone(ActiveBoneIdx).rbon_parent;
 		}
 		else
@@ -221,6 +247,7 @@ bool Update()
 			ParentBoneIdx = -1;
 			dummyDataNoBoneSelected();
 			b_loadParams.enabled(true);
+			b_updateDensity.enabled(true);
 		}
 	}
 

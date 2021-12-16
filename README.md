@@ -117,8 +117,8 @@ if(Kb.bp(KB_R))if(chr.ragdollBlend())if(MyRagdoll.Bone *bone=chr.ragdoll.findBon
 ```
 so Ragdoll.Bone must be changed to MyRagdoll.Bone. After that custom player with custom ragdoll will be used.
 
-##Warning
-* If in some case you will use cast to build in Game.Chr new MyRagdoll will be not used as it cover base class Ragdoll ragdoll.
-* Some other methods are also not virtual so there are only cover. This can couse errors.
+## Warning!
+* If in some case you will use cast to built in Game.Chr new MyRagdoll will be not used as it hides base class Ragdoll ragdoll.
+* Some other methods are also not virtual so there are only hide. This can couse errors.
 * This was made as alternative to editing source code but becouse of that it has limitation and couse erros in some cases.
 * The best ide will be to find good parameters and update them in engine source code.

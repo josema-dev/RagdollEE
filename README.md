@@ -32,7 +32,8 @@ Version 0.0.1 alpha. For test purpose only!
 * Disable mesh draw: Do not draw mesh.
 * Save params: Save ragdoll params to ragdoll_params.txt
 * Load params: Load ragdoll params from ragdoll_params.txt and set it into current ragdoll. IMPORTAND! Deselect all actors to enable load button.
-
+### Tips
+* If use model with skeleton like warrior disable creation of ragdoll for neck and check how it works.
 ## ChangeLog
 ### Version 0.0.2
 * Save selected actor and joint settings when switch too simulation mode or params are saved to file.
@@ -71,3 +72,53 @@ ragdoll.create(skel, rd,  1.7,  densityOut); // Create ragdoll from loaded data
 ```
 * At last change RAGDOLL_PARAMS_FILE_UID to your file UID, or if want you can load file with name from disc.
 * After that the ragdoll will be created with loaded parameters.
+
+### Example with custom player class
+For advanced tutorial with custom character we will use 14 - Game Basics/13 - Ragdoll.
+* Import text file with ragdoll parameters to your project (Just drag and drop for example to Objects folder).
+* Open application 14 - Game Basics/13 - Ragdoll.
+To make it work we need some extra code that can be found in EsenthelProjectSource in repository.
+* Create new code with name Player and copy code from [EsenthelProjectSource/Player.h](EsenthelProjectSource/Player.h)
+* In Player code in RagdollValidate change RAGDOLL_PARAMS_FILE_UID to your file UID, or if want you can load file with name from disc.
+* Create new code with name Helpers and copy code from [EsenthelProjectSource/Helpers.h](EsenthelProjectSource/Helpers.h)
+* Create new code with name MyRagdoll and copy code from [EsenthelProjectSource/MyRagdoll.h](EsenthelProjectSource/MyRagdoll.h)
+* Create new code with name MyRagdollParams and copy code from [EsenthelProjectSource/MyRagdollParams.h](EsenthelProjectSource/MyRagdollParams.h)
+You should now have all needed source code and project must build. If no report bug.
+To use new created class we need to make some changes in Main file.
+* Change line
+```cpp
+Game.ObjMap<Game.Chr> Chrs;
+```
+to
+```cpp
+Game.ObjMap<Player> Chrs;
+```
+and line
+```cpp
+Game.Chr &chr=Chrs[0];
+```
+to
+```cpp
+Player &chr=Chrs[0];
+```
+* Then we need to change
+```cpp
+if(Kb.bp(KB_Q))if(chr.ragdollBlend())if(Ragdoll.Bone *bone=chr.ragdoll.findBone("Head" ))bone.actor.addVel(Vec(0, 0, 3));
+if(Kb.bp(KB_W))if(chr.ragdollBlend())if(Ragdoll.Bone *bone=chr.ragdoll.findBone("Body" ))bone.actor.addVel(Vec(0, 0, 3));
+if(Kb.bp(KB_E))if(chr.ragdollBlend())if(Ragdoll.Bone *bone=chr.ragdoll.findBone("FootR"))bone.actor.addVel(Vec(0, 0, 4));
+if(Kb.bp(KB_R))if(chr.ragdollBlend())if(Ragdoll.Bone *bone=chr.ragdoll.findBone("HandR"))bone.actor.addVel(Vec(0, 0, 4));
+```
+to
+```cpp
+if(Kb.bp(KB_Q))if(chr.ragdollBlend())if(MyRagdoll.Bone *bone=chr.ragdoll.findBone("Head" ))bone.actor.addVel(Vec(0, 0, 3));
+if(Kb.bp(KB_W))if(chr.ragdollBlend())if(MyRagdoll.Bone *bone=chr.ragdoll.findBone("Body" ))bone.actor.addVel(Vec(0, 0, 3));
+if(Kb.bp(KB_E))if(chr.ragdollBlend())if(MyRagdoll.Bone *bone=chr.ragdoll.findBone("FootR"))bone.actor.addVel(Vec(0, 0, 4));
+if(Kb.bp(KB_R))if(chr.ragdollBlend())if(MyRagdoll.Bone *bone=chr.ragdoll.findBone("HandR"))bone.actor.addVel(Vec(0, 0, 4));
+```
+so Ragdoll.Bone must be changed to MyRagdoll.Bone. After that custom player with custom ragdoll will be used.
+
+##Warning
+* If in some case you will use cast to build in Game.Chr new MyRagdoll will be not used as it cover base class Ragdoll ragdoll.
+* Some other methods are also not virtual so there are only cover. This can couse errors.
+* This was made as alternative to editing source code but becouse of that it has limitation and couse erros in some cases.
+* The best ide will be to find good parameters and update them in engine source code.

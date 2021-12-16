@@ -428,10 +428,10 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                 }
             }
 
-            const RagdollActorData& rad = ragdollData.RagdollBone(sb.name);
-            rb.actor.adamping(rad.angularDamping);
-            rb.actor.damping(rad.damping);
-            rb.actor.sleepEnergy(rad.sleepEnergy);
+            const RagdollActorData *rad = ragdollData.RagdollBone(sb.name);
+            rb.actor.adamping(rad->angularDamping);
+            rb.actor.damping(rad->damping);
+            rb.actor.sleepEnergy(rad->sleepEnergy);
             rb.actor.group(GROUP_OBJ);
             rb.actor.user(ptr(i));
         }
@@ -450,9 +450,9 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                     {
                         Bone& ragdollBoneParent = _bones[rbon_parent];
                         C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
-                        const RagdollActorData& rad = ragdollData.RagdollBone(skelBone.name);
-                        ragdollBone.jointData = rad.jointData;
-                        createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad.jointData);
+                        const RagdollActorData *rad = ragdollData.RagdollBone(skelBone.name);
+                        ragdollBone.jointData = rad->jointData;
+                        createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad->jointData);
                     }
                 }
 

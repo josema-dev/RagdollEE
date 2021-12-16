@@ -9,24 +9,24 @@ RagdollData::RagdollData() : _density{ 1.0f } {}
 RagdollData::RagdollData(Flt density) : _density { density } {}
 RagdollData::RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones) : _density{ density }, _ragdollBones{ ragdollBones }{}
 
-const RagdollActorData& RagdollData::RagdollBone(EE::Str name) const
+const RagdollActorData* RagdollData::RagdollBone(EE::Str name) const
 {
 	for(int i=0; i<_ragdollBones.elms(); i++)
 	{
 		if (_ragdollBones[i].name == name)
-			return _ragdollBones[i];
+			return &_ragdollBones[i];
 	}
-	throw std::invalid_argument("Wrong bone name!");
+	return nullptr;
 }
 
-RagdollActorData& RagdollData::RagdollBone(EE::Str name)
+RagdollActorData* RagdollData::RagdollBone(EE::Str name)
 {
 	for (int i = 0; i < _ragdollBones.elms(); i++)
 	{
 		if (_ragdollBones[i].name == name)
-			return _ragdollBones[i];
+			return &_ragdollBones[i];
 	}
-	throw std::invalid_argument("Wrong bone name!");
+	return nullptr;
 }
 
 Mems<RagdollActorData> RagdollDataHelpers::GetDefaultRagdollData()

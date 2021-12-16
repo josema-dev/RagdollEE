@@ -70,4 +70,4 @@ RagdollData rd(densityOut,  rad); // Object with all data to create ragdoll
 ragdoll.create(skel, rd,  1.7,  densityOut); // Create ragdoll from loaded data
 ```
 * At last change RAGDOLL_PARAMS_FILE_UID to your file UID, or if want you can load file with name from disc.
-* After that the ragdoll will be created with saved parameters.
+* After that the ragdoll will be created with loaded parameters.

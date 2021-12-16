@@ -57,16 +57,17 @@ to
 ```cpp
 MyRagdoll ragdoll;
 ```
-Now our class is used for ragdoll but it is created with default parameters.
+Now new class is used for ragdoll but it is created with default parameters (Should behave the same as old one!?).
 * In Init() search for:
 ```cpp
 ragdoll.create(skel);                      // create ragdoll from skeleton
 ```
  and change it to
 ```cpp
-Flt densityOut;
-Mems<RagdollActorData> rad = RagdollDataHelpers::LoadRagdollData(UID(847958401, 1166262589, 4176582802, 1499001204), densityOut);
-RagdollData rd(densityOut,  rad);
-ragdoll.create(skel, rd,  1.7,  densityOut);
+Flt densityOut; // Density saved in file or 1000 if not saved.
+Mems<RagdollActorData> rad = RagdollDataHelpers::LoadRagdollData(RAGDOLL_PARAMS_FILE_UID, densityOut); // Parameters for all bones and joints
+RagdollData rd(densityOut,  rad); // Object with all data to create ragdoll
+ragdoll.create(skel, rd,  1.7,  densityOut); // Create ragdoll from loaded data
 ```
-After that the ragdoll will be created with saved parameters.
+* At last change RAGDOLL_PARAMS_FILE_UID to your file UID, or if want you can load file with name from disc.
+* After that the ragdoll will be created with saved parameters.

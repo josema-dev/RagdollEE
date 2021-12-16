@@ -47,7 +47,7 @@ public:
     const RagdollActorData* RagdollBone(EE::Str name) const;
     RagdollActorData* RagdollBone(EE::Str name);
     const Flt& Density() { return _density; }
-    RagdollData& Density(Flt density) { _density = density; }
+    RagdollData& Density(Flt density) { _density = density; return T; }
 
 protected:
 private:
@@ -61,6 +61,8 @@ class RagdollDataHelpers
 public:
     static bool SaveRagdollData(const EE::Str& fileName, const RagdollData &ragdollData);
     static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
+    static Mems<RagdollActorData> LoadRagdollData(C UID& id);
     static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName, Flt& densityOut);
+    static Mems<RagdollActorData> LoadRagdollData(C UID& id, Flt& densityOut);
     static Mems<RagdollActorData> GetDefaultRagdollData();
 };

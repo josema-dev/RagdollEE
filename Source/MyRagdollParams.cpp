@@ -60,6 +60,87 @@ Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileNa
 	return LoadRagdollData(fileName, densityOut);
 }
 
+Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(C UID& id)
+{
+	Flt densityOut = 1000.0f;
+	return LoadRagdollData(id, densityOut);
+}
+
+Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(C UID &id, Flt& densityOut)
+{
+	densityOut = 1000.0f;
+	Mems<RagdollActorData> ragdollData;
+	RagdollActorData ragdollActorData;
+	XmlData xml;
+	xml.load(id); // load from file
+	for (int i = 0; i < xml.nodes.elms(); i++)
+	{
+		if (XmlParam* param = xml.nodes[i].findParam("Name"))
+		{
+			Set(ragdollActorData.name, param->asText());
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxParent"))
+		{
+			ragdollActorData.ragdollBoneParentIdx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxSkelBone"))
+		{
+			ragdollActorData.skelBoneIdx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointAnchor"))
+		{
+			ragdollActorData.jointData.anchor = param->asVec();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointAxis"))
+		{
+			ragdollActorData.jointData.axis = param->asVec();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("IdxJoint"))
+		{
+			ragdollActorData.jointData.idx = param->asInt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointMaxAngle"))
+		{
+			ragdollActorData.jointData.maxAngle = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointMinAngle"))
+		{
+			ragdollActorData.jointData.minAngle = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointSwing"))
+		{
+			ragdollActorData.jointData.swing = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointTwist"))
+		{
+			ragdollActorData.jointData.twist = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("JointType"))
+		{
+			ragdollActorData.jointData.type = static_cast<JOINT_ENUM>(param->asInt());
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorADamping"))
+		{
+			ragdollActorData.angularDamping = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorDamping"))
+		{
+			ragdollActorData.damping = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("ActorSleepEnergy"))
+		{
+			ragdollActorData.sleepEnergy = param->asFlt();
+		}
+		if (XmlParam* param = xml.nodes[i].findParam("Density"))
+		{
+			densityOut = param->asFlt();
+		}
+		ragdollData.add(ragdollActorData);
+	}
+
+	return ragdollData;
+}
+
 Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileName, Flt& densityOut)
 {
 	densityOut = 1000.0f;

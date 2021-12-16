@@ -1,62 +1,53 @@
 enum class JOINT_ENUM
 {
-    JOINT_NO = -1,
-    JOINT_BODY_SPHERICAL = 0,
-    JOINT_BODY_HINGE = 1,
+	JOINT_NO = -1,
+	JOINT_BODY_SPHERICAL = 0,
+	JOINT_BODY_HINGE = 1,
 };
 
 struct JointData
 {
-    Vec anchor = Vec(0);
-    Vec axis = Vec(0);
-    JOINT_ENUM type = JOINT_ENUM::JOINT_NO;
-    Flt swing = 0.0f;
-    Flt twist = 0.0f;
-    Flt minAngle = 0.0f;
-    Flt maxAngle = 0.0f;
-    Int idx = -1;
+	Vec anchor = Vec(0);
+	Vec axis = Vec(0);
+	JOINT_ENUM type = JOINT_ENUM::JOINT_NO;
+	Flt swing = 0.0f;
+	Flt twist = 0.0f;
+	Flt minAngle = 0.0f;
+	Flt maxAngle = 0.0f;
+	Int idx = -1;
 };
 
 struct RagdollActorData
 {
-    Char8 name[32]; // name
-    JointData jointData;
-    Byte ragdollBoneParentIdx;
-    Byte skelBoneIdx;
-    Flt angularDamping;
-    Flt damping;
-    Flt sleepEnergy;
+	Char8 name[32]; // name
+	JointData jointData;
+	Byte ragdollBoneParentIdx;
+	Byte skelBoneIdx;
+	Flt angularDamping;
+	Flt damping;
+	Flt sleepEnergy;
 };
 
 class RagdollData
 {
 public:
-    RagdollData()
+	RagdollData()
 	{
 		_density = 1.0f;
 	}
-    RagdollData(Flt density)
+	RagdollData(Flt density)
 	{
 		_density = density;
 	}
 
-    RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones)
+	RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones)
 	{
 		_density = density;
-		 _ragdollBones = ragdollBones;
+		_ragdollBones = ragdollBones;
 	}
-    
-    //bool Load(const EE::Str& fileName);
-    const RagdollActorData* RagdollBone(EE::Str name) const
-	{
-		for(int i=0; i<_ragdollBones.elms(); i++)
-		{
-			if (_ragdollBones[i].name == name)
-				return &_ragdollBones[i];
-		}
-		return nullptr;
-	}
-    RagdollActorData* RagdollBone(EE::Str name)
+
+	//bool Load(const EE::Str& fileName);
+	const RagdollActorData* RagdollBone(EE::Str name) const
 	{
 		for (int i = 0; i < _ragdollBones.elms(); i++)
 		{
@@ -65,25 +56,34 @@ public:
 		}
 		return nullptr;
 	}
-    const Flt& Density() { return _density; }
-    RagdollData& Density(Flt density) { _density = density; return T; }
+	RagdollActorData* RagdollBone(EE::Str name)
+	{
+		for (int i = 0; i < _ragdollBones.elms(); i++)
+		{
+			if (_ragdollBones[i].name == name)
+				return &_ragdollBones[i];
+		}
+		return nullptr;
+	}
+	const Flt& Density() { return _density; }
+	RagdollData& Density(Flt density) { _density = density; return T; }
 
 protected:
 private:
-    Flt _density;
-    Mems<RagdollActorData> _ragdollBones;
-    friend class RagdollDataHelpers;
+	Flt _density;
+	Mems<RagdollActorData> _ragdollBones;
+	friend class RagdollDataHelpers;
 };
 
 class RagdollDataHelpers
 {
 public:
-    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName)
+	static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName)
 	{
 		Flt densityOut = 1000.0f;
 		return LoadRagdollData(fileName, densityOut);
 	}
-    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName, Flt& densityOut)
+	static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName, Flt& densityOut)
 	{
 		densityOut = 1000.0f;
 		Mems<RagdollActorData> ragdollData;
@@ -162,7 +162,7 @@ public:
 		Flt densityOut = 1000.0f;
 		return LoadRagdollData(id, densityOut);
 	}
-    static Mems<RagdollActorData> LoadRagdollData(C UID& id, Flt& densityOut)
+	static Mems<RagdollActorData> LoadRagdollData(C UID& id, Flt& densityOut)
 	{
 		densityOut = 1000.0f;
 		Mems<RagdollActorData> ragdollData;
@@ -236,7 +236,7 @@ public:
 
 		return ragdollData;
 	}
-    /*static Mems<RagdollActorData> GetDefaultRagdollData()
+	/*static Mems<RagdollActorData> GetDefaultRagdollData()
 	{
 		Mems<RagdollActorData> ragdollActors;
 		//{name, {anchor, axis, idx, maxAngle, minAngle, swing, twist, joint_type} parentIdx, skelBoneIdx, AngularDamping, Damping, SleepEnergy}

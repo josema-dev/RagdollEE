@@ -2,65 +2,65 @@
 #pragma pack(push, 1)
 struct RagdollDesc
 {
-    Byte group, dominance, material;
-    UInt user, flag;
-    Flt  sleep_energy;
+	Byte group, dominance, material;
+	UInt user, flag;
+	Flt  sleep_energy;
 };
 struct RagdollActorDesc
 {
-    Vec    vel, ang_vel;
-    Matrix matrix;
+	Vec    vel, ang_vel;
+	Matrix matrix;
 };
 #pragma pack(pop)
 
 class MyRagdoll
 {
-    struct Bone // ragdoll bone
-    {
-        Char8 name[32]; // name
-        Actor actor; // actor
-        JointData jointData;
-
-        //#if !EE_PRIVATE
-            //private:
-        //#endif
-        Byte skel_bone, rbon_parent;
-    };
-
-    // manage
-    MyRagdoll& del() // delete
+	struct Bone // ragdoll bone
 	{
-    	_joints.del();
-    	_bones.del();
-    	_resets.del();
-    	_aggr.del(); // delete aggregate after actors, so they won't be re-inserted into scene when aggregate is deleted
-    	zero();
+		Char8 name[32]; // name
+		Actor actor; // actor
+		JointData jointData;
+
+		//#if !EE_PRIVATE
+			//private:
+		//#endif
+		Byte skel_bone, rbon_parent;
+	};
+
+	// manage
+	MyRagdoll& del() // delete
+	{
+		_joints.del();
+		_bones.del();
+		_resets.del();
+		_aggr.del(); // delete aggregate after actors, so they won't be re-inserted into scene when aggregate is deleted
+		zero();
 		return T;
 	}
 
-    MyRagdoll& create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		if (!createTry(anim_skel, ragdollData, scale, density, kinematic))Exit("Can't create Ragdoll");
-    	return T;
+		return T;
 	}
-    MyRagdoll& create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
-    	if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
-    	return T;
+		if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
+		return T;
 	}
 	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const UID& id, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(id);
-    	if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
-    	return T;
+		if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
+		return T;
 	}
-    MyRagdoll& create(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false) // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), Exit  on fail
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false) // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), Exit  on fail
 	{
 		if (!createTry(anim_skel, scale, density, kinematic))Exit("Can't create Ragdoll");
-    	return T;
+		return T;
 	}
-    Bool     createTry(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false) // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), false on fail
+	Bool     createTry(C AnimatedSkeleton& anim_skel, Flt scale = 1, Flt density = 1, Bool kinematic = false) // create from animated skeleton, 'scale'=skeleton scale, 'kinematic'=if create the bone actors as kinematic (additionally this will not create joints), false on fail
 	{
 		del();
 		_density = density;
@@ -348,7 +348,7 @@ class MyRagdoll
 		}
 		return false;
 	}
-    Bool     createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	Bool     createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		del();
 
@@ -442,7 +442,7 @@ class MyRagdoll
 					}
 				}
 
-				const RagdollActorData *rad = ragdollData.RagdollBone(sb.name);
+				const RagdollActorData* rad = ragdollData.RagdollBone(sb.name);
 				rb.actor.adamping(rad->angularDamping);
 				rb.actor.damping(rad->damping);
 				rb.actor.sleepEnergy(rad->sleepEnergy);
@@ -464,7 +464,7 @@ class MyRagdoll
 						{
 							Bone& ragdollBoneParent = _bones[rbon_parent];
 							C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
-							const RagdollActorData *rad = ragdollData.RagdollBone(skelBone.name);
+							const RagdollActorData* rad = ragdollData.RagdollBone(skelBone.name);
 							ragdollBone.jointData = rad->jointData;
 							createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad->jointData);
 						}
@@ -482,8 +482,8 @@ class MyRagdoll
 		return false;
 	}
 
-    // operations
-    MyRagdoll& fromSkel(C AnimatedSkeleton& anim_skel, C Vec& vel = VecZero, Bool immediate_even_for_kinematic_ragdoll = false) // set   ragdoll  from skeleton          , 'anim_skel' must have its matrixes updated, 'anim_skel' must be set to the same skeleton which ragdoll was created from, setting ragdoll bone matrixes is done using 'Actor::kinematicMoveTo' for kinematic ragdolls and 'Actor::matrix' for non kinematic ragdolls, however since 'Actor::kinematicMoveTo' doesn't set the matrixes immediately, you can set 'immediate_even_for_kinematic_ragdoll' to true, which will force setting the bone matrixes immediately using 'Actor::matrix' method.
+	// operations
+	MyRagdoll& fromSkel(C AnimatedSkeleton& anim_skel, C Vec& vel = VecZero, Bool immediate_even_for_kinematic_ragdoll = false) // set   ragdoll  from skeleton          , 'anim_skel' must have its matrixes updated, 'anim_skel' must be set to the same skeleton which ragdoll was created from, setting ragdoll bone matrixes is done using 'Actor::kinematicMoveTo' for kinematic ragdolls and 'Actor::matrix' for non kinematic ragdolls, however since 'Actor::kinematicMoveTo' doesn't set the matrixes immediately, you can set 'immediate_even_for_kinematic_ragdoll' to true, which will force setting the bone matrixes immediately using 'Actor::matrix' method.
 	{
 		if (_skel == anim_skel.skeleton())
 		{
@@ -507,7 +507,7 @@ class MyRagdoll
 		}
 		return T;
 	}
-    MyRagdoll& toSkel(AnimatedSkeleton& anim_skel) // set   skeleton from ragdoll                                                       , 'anim_skel' must be set to the same skeleton which ragdoll was created from
+	MyRagdoll& toSkel(AnimatedSkeleton& anim_skel) // set   skeleton from ragdoll                                                       , 'anim_skel' must be set to the same skeleton which ragdoll was created from
 	{
 		if (_skel == anim_skel.skeleton() && bones())
 		{
@@ -548,7 +548,7 @@ class MyRagdoll
 		}
 		return T;
 	}
-    MyRagdoll& toSkelBlend(AnimatedSkeleton& anim_skel, Flt blend) // blend ragdoll animations into skeleton, 'anim_skel' must have its matrixes updated, 'anim_skel' must be set to the same skeleton which ragdoll was created from
+	MyRagdoll& toSkelBlend(AnimatedSkeleton& anim_skel, Flt blend) // blend ragdoll animations into skeleton, 'anim_skel' must have its matrixes updated, 'anim_skel' must be set to the same skeleton which ragdoll was created from
 	{
 		if (_skel == anim_skel.skeleton() && bones())
 		{
@@ -603,55 +603,55 @@ class MyRagdoll
 		return T;
 	}
 
-    // get / set
-    Bool is()C { return _skel != null; } // if  created
+	// get / set
+	Bool is()C { return _skel != null; } // if  created
 
-    Int   bones()C { return _bones.elms(); } // get number of bones
-    Bone& bone(Int i) { return _bones[i]; } // get i-th      bone
-    C Bone& bone(Int i)C { return _bones[i]; } // get i-th      bone
+	Int   bones()C { return _bones.elms(); } // get number of bones
+	Bone& bone(Int i) { return _bones[i]; } // get i-th      bone
+	C Bone& bone(Int i)C { return _bones[i]; } // get i-th      bone
 
-    MyRagdoll& MyRagdoll::pos(C Vec& pos) { Vec delta = pos - T.pos(); REPAO(_bones).actor.pos(bone(i).actor.pos() + delta); return T; }
+	MyRagdoll& MyRagdoll::pos(C Vec& pos) { Vec delta = pos - T.pos(); REPAO(_bones).actor.pos(bone(i).actor.pos() + delta); return T; }
 	Vec       MyRagdoll::pos()C { return bones() ? bone(0).actor.pos() : 0; }
 	MyRagdoll& MyRagdoll::vel(C Vec& vel) { REPAO(_bones).actor.vel(vel); return T; } // get/set ragdoll velocity, velocity is taken from the main bone, however setting velocity applies to all ragdoll bones equally
-    Vec       MyRagdoll::vel()C { return bones() ? bone(0).actor.vel() : 0; } // get/set ragdoll velocity, velocity is taken from the main bone, however setting velocity applies to all ragdoll bones equally
-    MyRagdoll& MyRagdoll::damping(Flt       damping) { REPAO(_bones).actor.damping(damping); return T; } // get/set linear  damping, 0..Inf, default=0.05
+	Vec       MyRagdoll::vel()C { return bones() ? bone(0).actor.vel() : 0; } // get/set ragdoll velocity, velocity is taken from the main bone, however setting velocity applies to all ragdoll bones equally
+	MyRagdoll& MyRagdoll::damping(Flt       damping) { REPAO(_bones).actor.damping(damping); return T; } // get/set linear  damping, 0..Inf, default=0.05
 	Flt       MyRagdoll::damping()C { return bones() ? bone(0).actor.damping() : 0; }
-    MyRagdoll& MyRagdoll::adamping(Flt       damping) { REPAO(_bones).actor.adamping(damping); return T; } // get/set angular damping, 0..Inf, default=0.05
+	MyRagdoll& MyRagdoll::adamping(Flt       damping) { REPAO(_bones).actor.adamping(damping); return T; } // get/set angular damping, 0..Inf, default=0.05
 	Flt       MyRagdoll::adamping()C { return bones() ? bone(0).actor.adamping() : 0; }
-    MyRagdoll& MyRagdoll::kinematic(Bool      on) { REPAO(_bones).actor.kinematic(on); return T; } // get/set if kinematic, only dynamic actors (with mass!=0) can be changed into kinematic actors
+	MyRagdoll& MyRagdoll::kinematic(Bool      on) { REPAO(_bones).actor.kinematic(on); return T; } // get/set if kinematic, only dynamic actors (with mass!=0) can be changed into kinematic actors
 	Bool      MyRagdoll::kinematic()C { return bones() ? bone(0).actor.kinematic() : false; }
-    MyRagdoll& MyRagdoll::gravity(Bool      on) { REPAO(_bones).actor.gravity(on); return T; } // get/set if gravity is enabled for this ragdoll
+	MyRagdoll& MyRagdoll::gravity(Bool      on) { REPAO(_bones).actor.gravity(on); return T; } // get/set if gravity is enabled for this ragdoll
 	Bool      MyRagdoll::gravity()C { return bones() ? bone(0).actor.gravity() : false; }
-    MyRagdoll& MyRagdoll::ray(Bool      on) { REPAO(_bones).actor.ray(on); return T; } // get/set if this ragdoll should be included when performing ray tests
+	MyRagdoll& MyRagdoll::ray(Bool      on) { REPAO(_bones).actor.ray(on); return T; } // get/set if this ragdoll should be included when performing ray tests
 	Bool      MyRagdoll::ray()C { return bones() ? bone(0).actor.ray() : false; }
-    MyRagdoll& MyRagdoll::collision(Bool      on) { REPAO(_bones).actor.collision(on); return T; } // get/set if this ragdoll should collide with other actors in the world
+	MyRagdoll& MyRagdoll::collision(Bool      on) { REPAO(_bones).actor.collision(on); return T; } // get/set if this ragdoll should collide with other actors in the world
 	Bool      MyRagdoll::collision()C { return bones() ? bone(0).actor.collision() : false; }
-    MyRagdoll& MyRagdoll::sleep(Bool      sleep) { REPAO(_bones).actor.sleep(sleep); return T; } // get/set sleeping
+	MyRagdoll& MyRagdoll::sleep(Bool      sleep) { REPAO(_bones).actor.sleep(sleep); return T; } // get/set sleeping
 	Bool      MyRagdoll::sleep()C { return bones() ? bone(0).actor.sleep() : false; }
-    MyRagdoll& MyRagdoll::sleepEnergy(Flt       energy) { REPAO(_bones).actor.sleepEnergy(energy); return T; } // get/set the amount of energy below the ragdoll is put to sleep, default=0.1
+	MyRagdoll& MyRagdoll::sleepEnergy(Flt       energy) { REPAO(_bones).actor.sleepEnergy(energy); return T; } // get/set the amount of energy below the ragdoll is put to sleep, default=0.1
 	Flt       MyRagdoll::sleepEnergy()C { return bones() ? bone(0).actor.sleepEnergy() : 0; }
-    MyRagdoll& MyRagdoll::ccd(Bool      on) { REPAO(_bones).actor.ccd(on); return T; } // get/set continuous collision detection
+	MyRagdoll& MyRagdoll::ccd(Bool      on) { REPAO(_bones).actor.ccd(on); return T; } // get/set continuous collision detection
 	Bool      MyRagdoll::ccd()C { return bones() ? bone(0).actor.ccd() : false; }
-    MyRagdoll& MyRagdoll::user(Ptr       user) { REPAO(_bones).actor.user(user); return T; } // get/set user data
+	MyRagdoll& MyRagdoll::user(Ptr       user) { REPAO(_bones).actor.user(user); return T; } // get/set user data
 	Ptr       MyRagdoll::user()C { return bones() ? bone(0).actor.user() : null; }
-    MyRagdoll& MyRagdoll::obj(Ptr       obj) { REPAO(_bones).actor.obj(obj); return T; } // get/set pointer to object containing the ragdoll
+	MyRagdoll& MyRagdoll::obj(Ptr       obj) { REPAO(_bones).actor.obj(obj); return T; } // get/set pointer to object containing the ragdoll
 	Ptr       MyRagdoll::obj()C { return bones() ? bone(0).actor.obj() : null; }
-    MyRagdoll& MyRagdoll::group(Byte      group) { REPAO(_bones).actor.group(group); return T; } // get/set collision group (0..31, ACTOR_GROUP)
+	MyRagdoll& MyRagdoll::group(Byte      group) { REPAO(_bones).actor.group(group); return T; } // get/set collision group (0..31, ACTOR_GROUP)
 	Byte      MyRagdoll::group()C { return bones() ? bone(0).actor.group() : 0; }
-    MyRagdoll& MyRagdoll::dominance(Byte      dominance) { REPAO(_bones).actor.dominance(dominance); return T; } // get/set dominance index (0..31, default=0), for more information about dominance please check comments on 'Physics.dominance' method
+	MyRagdoll& MyRagdoll::dominance(Byte      dominance) { REPAO(_bones).actor.dominance(dominance); return T; } // get/set dominance index (0..31, default=0), for more information about dominance please check comments on 'Physics.dominance' method
 	Byte      MyRagdoll::dominance()C { return bones() ? bone(0).actor.dominance() : 0; }
-    MyRagdoll& MyRagdoll::material(PhysMtrl* material) { REPAO(_bones).actor.material(material); return T; } // get/set physics material (use 'null' for default material)
+	MyRagdoll& MyRagdoll::material(PhysMtrl* material) { REPAO(_bones).actor.material(material); return T; } // get/set physics material (use 'null' for default material)
 	PhysMtrl* MyRagdoll::material()C { return bones() ? bone(0).actor.material() : null; }
 
-    MyRagdoll& MyRagdoll::active(Bool      on) { REPAO(_bones).actor.active(on); return T; } // set if active by calling 'Actor::active' on all ragdoll bone actors
-    MyRagdoll& MyRagdoll::ignore(Actor& actor, Bool ignore) { REPAO(_bones).actor.ignore(actor, ignore); return T; } // ignore collisions with 'actor'
+	MyRagdoll& MyRagdoll::active(Bool      on) { REPAO(_bones).actor.active(on); return T; } // set if active by calling 'Actor::active' on all ragdoll bone actors
+	MyRagdoll& MyRagdoll::ignore(Actor& actor, Bool ignore = true) { REPAO(_bones).actor.ignore(actor, ignore); return T; } // ignore collisions with 'actor'
 
-    Int   MyRagdoll::findBoneI(CChar8* name) { REPA(T)if (Equal(bone(i).name, name))return i; return -1; } // find ragdoll bone index, -1   on fail
-    MyRagdoll::Bone* MyRagdoll::findBone(CChar8* name) { Int      i = findBoneI(name); return (i < 0) ? null : &bone(i); } // find ragdoll bone      , null on fail
-    Int   MyRagdoll::getBoneI(CChar8* name) { Int      i = findBoneI(name); if (i < 0)Exit(S + "Bone \"" + name + "\" not found in Ragdoll."); return i; } // get  ragdoll bone index, Exit on fail
-    MyRagdoll::Bone& MyRagdoll::getBone(CChar8* name) { return bone(getBoneI(name)); } // get  ragdoll bone      , Exit on fail
+	Int   MyRagdoll::findBoneI(CChar8* name) { REPA(T)if (Equal(bone(i).name, name))return i; return -1; } // find ragdoll bone index, -1   on fail
+	MyRagdoll::Bone* MyRagdoll::findBone(CChar8* name) { Int      i = findBoneI(name); return (i < 0) ? null : &bone(i); } // find ragdoll bone      , null on fail
+	Int   MyRagdoll::getBoneI(CChar8* name) { Int      i = findBoneI(name); if (i < 0)Exit(S + "Bone \"" + name + "\" not found in Ragdoll."); return i; } // get  ragdoll bone index, Exit on fail
+	MyRagdoll::Bone& MyRagdoll::getBone(CChar8* name) { return bone(getBoneI(name)); } // get  ragdoll bone      , Exit on fail
 
-    Int findBoneIndexFromSkelBone(Byte skel_bone_index)C // find ragdoll bone index, from skeleton bone index, -1 on fail
+	Int findBoneIndexFromSkelBone(Byte skel_bone_index)C // find ragdoll bone index, from skeleton bone index, -1 on fail
 	{
 		if (bones())
 		{
@@ -668,24 +668,24 @@ class MyRagdoll
 		}
 		return -1;
 	}
-    Int findBoneIndexFromVtxMatrix(Byte    matrix_index)C // find ragdoll bone index, from vertex matrix index, -1 on fail
+	Int findBoneIndexFromVtxMatrix(Byte    matrix_index)C // find ragdoll bone index, from vertex matrix index, -1 on fail
 	{
 		return findBoneIndexFromSkelBone(matrix_index - 1);
 	}
 
-    Flt density()C { return _density; }
-    MyRagdoll& density(Flt density) { _density = density; return T; }
-    //Mems<RagdollActorData> GetRagdollData();
-    // draw
-    void draw(C Color& color = WHITE)C // this can be optionally called outside of Render function
+	Flt density()C { return _density; }
+	MyRagdoll& density(Flt density) { _density = density; return T; }
+	//Mems<RagdollActorData> GetRagdollData();
+	// draw
+	void draw(C Color& color = WHITE)C // this can be optionally called outside of Render function
 	{
 		FREP(_bones.elms())
 		{
 			_bones[i].actor.draw(color);
 		}
 	}
-    // io
-    Bool saveState(File& f, Bool include_matrix_vel = true)C // save ragdoll state (following data is not  saved: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, 'include_matrix_vel'=include current bone matrixes and velocities
+	// io
+	Bool saveState(File& f, Bool include_matrix_vel = true)C // save ragdoll state (following data is not  saved: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, 'include_matrix_vel'=include current bone matrixes and velocities
 	{
 		f.cmpUIntV(0);
 
@@ -721,7 +721,7 @@ class MyRagdoll
 		}
 		return f.ok();
 	}
-    Bool loadState(File& f) // load ragdoll state (following data is not loaded: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, typically you should first create a Ragdoll and then call this method to set its state according to data from the file
+	Bool loadState(File& f) // load ragdoll state (following data is not loaded: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, typically you should first create a Ragdoll and then call this method to set its state according to data from the file
 	{
 		switch (f.decUIntV())
 		{
@@ -770,74 +770,74 @@ class MyRagdoll
 		return false;
 	}
 
-//#if EE_PRIVATE
-    void zero()
+	//#if EE_PRIVATE
+	void zero()
 	{
-    	_scale = 0;
-    	_skel = null;
-    	_ragdollData = nullptr;
+		_scale = 0;
+		_skel = null;
+		_ragdollData = nullptr;
 	}
-    //#endif
+	//#endif
 
-    ~MyRagdoll() { del(); }
-    MyRagdoll() { zero(); }
+	~MyRagdoll() { del(); }
+	MyRagdoll() { zero(); }
 
-    //#if !EE_PRIVATE
+	//#if !EE_PRIVATE
 private:
-    void createJoint(Actor& rb, Actor& rbp, const JointData& jointData)
+	void createJoint(Actor& rb, Actor& rbp, const JointData& jointData)
 	{
 		switch (jointData.type)
 		{
 		case JOINT_ENUM::JOINT_BODY_HINGE:
-			{
-				_joints.New().createBodyHinge(rb, rbp, jointData.anchor * _scale, jointData.axis, DegToRad(jointData.minAngle), DegToRad(jointData.maxAngle));
-				break;
-			}
+		{
+			_joints.New().createBodyHinge(rb, rbp, jointData.anchor * _scale, jointData.axis, DegToRad(jointData.minAngle), DegToRad(jointData.maxAngle));
+			break;
+		}
 		case JOINT_ENUM::JOINT_BODY_SPHERICAL:
-			{
-				_joints.New().createBodySpherical(rb, rbp, jointData.anchor * _scale, jointData.axis, DegToRad(jointData.swing), DegToRad(jointData.twist));
-				break;
-			}
+		{
+			_joints.New().createBodySpherical(rb, rbp, jointData.anchor * _scale, jointData.axis, DegToRad(jointData.swing), DegToRad(jointData.twist));
+			break;
+		}
 		case JOINT_ENUM::JOINT_NO:
 		default:
 			return;
 		}
 	}
-    //#endif
-    Flt         _scale;
-    C Skeleton* _skel;
-    Mems<Bone > _bones;
-    Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
-    Memc<Joint> _joints;
-    Aggregate   _aggr;
-    RagdollData *_ragdollData;
-    Flt _density;
+	//#endif
+	Flt         _scale;
+	C Skeleton* _skel;
+	Mems<Bone > _bones;
+	Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
+	Memc<Joint> _joints;
+	Aggregate   _aggr;
+	RagdollData* _ragdollData;
+	Flt _density;
 };
 /******************************************************************************/
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }
 /******************************************************************************/
 inline Shape ShapeBone(C Vec& from, C Vec& to, Flt width)
 {
-    Shape shape;
-    if (width >= 0.5f)
-    {
-        shape.type = SHAPE_BALL; Ball& ball = shape.ball;
-        ball.pos = Avg(from, to);
-        ball.r = width * (to - from).length();
-    }
-    else
-    {
-        shape.type = SHAPE_CAPSULE; Capsule& capsule = shape.capsule;
-        capsule.pos = Avg(from, to);
-        capsule.up = to - from;
-        capsule.h = capsule.up.normalize();
-        capsule.r = Max(0.01f, width * capsule.h);
+	Shape shape;
+	if (width >= 0.5f)
+	{
+		shape.type = SHAPE_BALL; Ball& ball = shape.ball;
+		ball.pos = Avg(from, to);
+		ball.r = width * (to - from).length();
+	}
+	else
+	{
+		shape.type = SHAPE_CAPSULE; Capsule& capsule = shape.capsule;
+		capsule.pos = Avg(from, to);
+		capsule.up = to - from;
+		capsule.h = capsule.up.normalize();
+		capsule.r = Max(0.01f, width * capsule.h);
 
-        Flt eps = capsule.r * 0.5f;
-        capsule.pos -= eps * capsule.up;
-        capsule.h += eps * 2;
-    }
-    return shape;
+		Flt eps = capsule.r * 0.5f;
+		capsule.pos -= eps * capsule.up;
+		capsule.h += eps * 2;
+	}
+	return shape;
 }
 inline Shape ShapeBone(C SkelBone& bone) { return ShapeBone(bone.pos, bone.to(), bone.width); } // return shape from bone
 /******************************************************************************/

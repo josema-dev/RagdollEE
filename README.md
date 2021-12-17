@@ -7,9 +7,38 @@ Ragdoll edytor based on build in Esenthel Engine classes Ragdoll and Chr.
 * C++
 
 ## Getting Started
-* Open Project.sln
-* Build
+* Open Project.sln and update all paths to point to Esenthel engine installation directory.
+* Open stdafx.h and update path to where Esenthel engine is installed.
+Change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
+* Open project property. Go to Linker->Input->Additional Dependencies and
+change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
+* Build, if have some include errors or linker check if previous steps are make correct.
+```
+Error (active)	E1696	cannot open source file "ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine/_/System/begin.h"
+
+```
+```
+Error	LNK1104	cannot open file 'ESENTHEL_ENGINE_INSTALL_PATH\Bin\EsenthelEngine64DX11.lib'
+
+```
 * Run MyRagdoll.exe
+* Project is set for PUBLISH so it use local Engine.pak and Project.pak. If you want to change it got o Auto.cpp and change
+```cpp
+const bool EE_PUBLISH          =true; // this is set to true when compiling for publishing
+```
+to
+```cpp
+const bool EE_PUBLISH          =false; // this is set to true when compiling for publishing
+```
+And also change path to engine pak and project pak.
+```cpp
+cchar *C   EE_ENGINE_PATH      =((WINDOWS_NEW || MOBILE || WEB) ? u"Engine.pak"  : EE_PUBLISH ? u"Bin/Engine.pak"  : u"ESENTHEL_ENGINE_INSTALL_PATH/Bin/Engine.pak");
+cchar *C   EE_PROJECT_PATH     =((WINDOWS_NEW || MOBILE || WEB) ? u"Project.pak" : EE_PUBLISH ? u"Bin/Project.pak" : u"ESENTHEL_ENGINE_PROJECT_PATH/Game");
+```
+* If you want to use custom model and have set correct project pak. You must change UID in line in Main.cpp->InitPre:
+```cpp
+player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
+```
 
 ## Usage
 Version 0.0.1 alpha. For test purpose only!

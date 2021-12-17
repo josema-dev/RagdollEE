@@ -2,7 +2,6 @@
 
 #include "MyRagdollParams.h"
 #include "MyRagdoll.h"
-
 #include "Player.h"
 
 RagdollData::RagdollData() : _density{ 1.0f } {}

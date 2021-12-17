@@ -20,7 +20,10 @@ public:
 	virtual void  enable() override;
 	virtual Bool save(File& f) override;
 	virtual Bool load(File& f) override;
+	void updateAnimation();
 
+	static void AlignFeet(Chr& chr, Flt step); // align character feet by 'step'=0..1 factor
+	static Flt AnimTime(Chr& chr); // get global animation time for the character according to current time and character's 'unique' value
 };
 
 #endif //__PLAYER_H__

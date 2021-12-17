@@ -179,7 +179,7 @@ public:
 		return false;
 	}
 
-	virtual void updateAnimation() override
+	void updateAnimation()
 	{
 		updateAnimationAnim();
 

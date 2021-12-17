@@ -41,7 +41,6 @@ MyRagdoll& MyRagdoll::del()
     _joints.del();
     _bones.del();
     _resets.del();
-    _aggr.del(); // delete aggregate after actors, so they won't be re-inserted into scene when aggregate is deleted
     zero(); return T;
 }
 
@@ -328,7 +327,6 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
                 if (Cuts(shapes[i], shapes[j]))
                     bone(i).actor.ignore(bone(j).actor);
         }
-        //_aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
         return true;
     }
     return false;
@@ -462,7 +460,6 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                 if (Cuts(shapes[i], shapes[j]))
                     bone(i).actor.ignore(bone(j).actor);
         }
-        //_aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
         return true;
     }
     return false;
@@ -512,11 +509,8 @@ MyRagdoll& MyRagdoll::fromSkel(C AnimatedSkeleton& anim_skel, C Vec& vel, Bool i
             Bone& rbon = bone(i);
             Actor& actor = rbon.actor;
 
-            //#if 1
             Matrix matrix = anim_skel.bones[rbon.skel_bone].matrix();
-            //#else
-            //            Matrix matrix = (i ? anim_skel.bone(rbon.skel_bone)._matrix : anim_skel.matrix);
-            //#endif
+ 
             if (scaled)matrix.orn() /= _scale;
 
             if (kinematic)actor.kinematicMoveTo(matrix);
@@ -534,16 +528,6 @@ MyRagdoll& MyRagdoll::toSkel(AnimatedSkeleton& anim_skel)
         // reset the orientation of non-ragdoll bones (and main and root) for default pose (the one from default Skeleton)
         anim_skel.root.clear();
         REPA(_resets)anim_skel.bones[_resets[i]].clear();
-#if 0
-        {
-            Byte      sbone = _resets[i];
-            Orient& bone_orn = anim_skel.bone(sbone).orn;
-            SkelBone& skel_bone = skel.bone(sbone);
-            Byte      sparent = skel_bone.parent;
-            if (sparent == 0xFF)bone_orn = GetAnimOrient(skel_bone);
-            else             bone_orn = GetAnimOrient(skel_bone, &skel.bone(sparent));
-        }
-#endif
 
         // set bone oriantation according to actors
         Matrix   body = bone(0).actor.matrix();
@@ -620,12 +604,7 @@ MyRagdoll& MyRagdoll::toSkelBlend(AnimatedSkeleton& anim_skel, Flt blend)
     }
     return T;
 }
-/******************************************************************************
-Flt area  (); // total surface area of shapes
-Flt volume(); // total volume       of shapes
-Flt Ragdoll::area  (){Flt a=0; REP(_bones)a+=shape[i].area  (); return a*Sqr (scale);}
-Flt Ragdoll::volume(){Flt v=0; REP(_bones)v+=shape[i].volume(); return v*Cube(scale);}
-/******************************************************************************/
+
 MyRagdoll& MyRagdoll::pos(C Vec& pos) { Vec delta = pos - T.pos(); REPAO(_bones).actor.pos(bone(i).actor.pos() + delta); return T; }
 MyRagdoll& MyRagdoll::vel(C Vec& vel) { REPAO(_bones).actor.vel(vel); return T; }
 MyRagdoll& MyRagdoll::damping(Flt       damping) { REPAO(_bones).actor.damping(damping); return T; }
@@ -659,14 +638,14 @@ PhysMtrl* MyRagdoll::material()C { return bones() ? bone(0).actor.material() : n
 Bool      MyRagdoll::sleep()C { return bones() ? bone(0).actor.sleep() : false; }
 Flt       MyRagdoll::sleepEnergy()C { return bones() ? bone(0).actor.sleepEnergy() : 0; }
 Bool      MyRagdoll::ccd()C { return bones() ? bone(0).actor.ccd() : false; }
-/******************************************************************************/
+
 MyRagdoll& MyRagdoll::ignore(Actor& actor, Bool ignore) { REPAO(_bones).actor.ignore(actor, ignore); return T; }
-/******************************************************************************/
+
 Int   MyRagdoll::findBoneI(CChar8* name) { REPA(T)if (Equal(bone(i).name, name))return i; return -1; }
 MyRagdoll::Bone* MyRagdoll::findBone(CChar8* name) { Int      i = findBoneI(name); return (i < 0) ? null : &bone(i); }
 Int   MyRagdoll::getBoneI(CChar8* name) { Int      i = findBoneI(name); if (i < 0)Exit(S + "Bone \"" + name + "\" not found in Ragdoll."); return i; }
 MyRagdoll::Bone& MyRagdoll::getBone(CChar8* name) { return bone(getBoneI(name)); }
-/******************************************************************************/
+
 Int MyRagdoll::findBoneIndexFromSkelBone(Byte skel_bone_index)C
 {
     if (bones())
@@ -688,7 +667,7 @@ Int MyRagdoll::findBoneIndexFromVtxMatrix(Byte matrix_index)C
 {
     return findBoneIndexFromSkelBone(matrix_index - 1);
 }
-/******************************************************************************/
+
 void MyRagdoll::draw(C Color& col)C
 {
     FREP(_bones.elms())
@@ -741,7 +720,7 @@ void MyRagdoll::draw(C Color& color, C Color& colorSelect, C Color& colorParent,
         }
     }
 }
-/******************************************************************************/
+
 #pragma pack(push, 1)
 struct RagdollDesc
 {

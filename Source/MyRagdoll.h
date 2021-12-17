@@ -14,9 +14,6 @@ class MyRagdoll
         Actor actor; // actor
         JointData jointData;
 
-        //#if !EE_PRIVATE
-            //private:
-        //#endif
         Byte skel_bone, rbon_parent;
     };
 
@@ -84,29 +81,22 @@ class MyRagdoll
     Bool saveState(File& f, Bool include_matrix_vel = true)C; // save ragdoll state (following data is not  saved: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, 'include_matrix_vel'=include current bone matrixes and velocities
     Bool loadState(File& f); // load ragdoll state (following data is not loaded: physical body, mass, density, scale, damping, max ang vel, mass center, inertia, material), false on fail, typically you should first create a Ragdoll and then call this method to set its state according to data from the file
 
-//#if EE_PRIVATE
     void zero();
-    //#endif
 
     ~MyRagdoll() { del(); }
     MyRagdoll();
 
-    //#if !EE_PRIVATE
 private:
     void createJoint(Actor& rb, Actor& rbp, const JointData& rad);
-    //#endif
     Flt         _scale;
     C Skeleton* _skel;
     Mems<Bone > _bones;
     Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
     Memc<Joint> _joints;
-    Aggregate   _aggr;
     RagdollData *_ragdollData;
     Flt _density;
 };
-/******************************************************************************/
+
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }
-/******************************************************************************/
-/******************************************************************************/
 
 #endif //__MY_RAGDOLL_H__

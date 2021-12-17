@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "@@headers.h"
 
-
 class Player;
 
 enum class JOINT_ENUM

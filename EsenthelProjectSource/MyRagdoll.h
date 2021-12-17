@@ -21,9 +21,6 @@ class MyRagdoll
 		Actor actor; // actor
 		JointData jointData;
 
-		//#if !EE_PRIVATE
-			//private:
-		//#endif
 		Byte skel_bone, rbon_parent;
 	};
 
@@ -33,7 +30,6 @@ class MyRagdoll
 		_joints.del();
 		_bones.del();
 		_resets.del();
-		_aggr.del(); // delete aggregate after actors, so they won't be re-inserted into scene when aggregate is deleted
 		zero();
 		return T;
 	}
@@ -343,7 +339,6 @@ class MyRagdoll
 					if (Cuts(shapes[i], shapes[j]))
 						bone(i).actor.ignore(bone(j).actor);
 			}
-			//_aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
 			return true;
 		}
 		return false;
@@ -476,7 +471,6 @@ class MyRagdoll
 					if (Cuts(shapes[i], shapes[j]))
 						bone(i).actor.ignore(bone(j).actor);
 			}
-			//_aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
 			return true;
 		}
 		return false;
@@ -494,11 +488,8 @@ class MyRagdoll
 				Bone& rbon = bone(i);
 				Actor& actor = rbon.actor;
 
-				//#if 1
 				Matrix matrix = anim_skel.bones[rbon.skel_bone].matrix();
-				//#else
-				//            Matrix matrix = (i ? anim_skel.bone(rbon.skel_bone)._matrix : anim_skel.matrix);
-				//#endif
+
 				if (scaled)matrix.orn() /= _scale;
 
 				if (kinematic)actor.kinematicMoveTo(matrix);
@@ -516,16 +507,6 @@ class MyRagdoll
 			// reset the orientation of non-ragdoll bones (and main and root) for default pose (the one from default Skeleton)
 			anim_skel.root.clear();
 			REPA(_resets)anim_skel.bones[_resets[i]].clear();
-#if 0
-			{
-				Byte      sbone = _resets[i];
-				Orient& bone_orn = anim_skel.bone(sbone).orn;
-				SkelBone& skel_bone = skel.bone(sbone);
-				Byte      sparent = skel_bone.parent;
-				if (sparent == 0xFF)bone_orn = GetAnimOrient(skel_bone);
-				else             bone_orn = GetAnimOrient(skel_bone, &skel.bone(sparent));
-			}
-#endif
 
 			// set bone oriantation according to actors
 			Matrix   body = bone(0).actor.matrix();
@@ -675,7 +656,7 @@ class MyRagdoll
 
 	Flt density()C { return _density; }
 	MyRagdoll& density(Flt density) { _density = density; return T; }
-	//Mems<RagdollActorData> GetRagdollData();
+
 	// draw
 	void draw(C Color& color = WHITE)C // this can be optionally called outside of Render function
 	{
@@ -770,19 +751,16 @@ class MyRagdoll
 		return false;
 	}
 
-	//#if EE_PRIVATE
 	void zero()
 	{
 		_scale = 0;
 		_skel = null;
 		_ragdollData = nullptr;
 	}
-	//#endif
 
 	~MyRagdoll() { del(); }
 	MyRagdoll() { zero(); }
 
-	//#if !EE_PRIVATE
 private:
 	void createJoint(Actor& rb, Actor& rbp, const JointData& jointData)
 	{
@@ -803,19 +781,18 @@ private:
 			return;
 		}
 	}
-	//#endif
+
 	Flt         _scale;
 	C Skeleton* _skel;
 	Mems<Bone > _bones;
 	Memc<Int  > _resets; //Indices that are not included in ragdoll and needed to recreate skeleton from ragdoll.
 	Memc<Joint> _joints;
-	Aggregate   _aggr;
 	RagdollData* _ragdollData;
 	Flt _density;
 };
-/******************************************************************************/
+
 inline Int Elms(C MyRagdoll& ragdoll) { return ragdoll.bones(); }
-/******************************************************************************/
+
 inline Shape ShapeBone(C Vec& from, C Vec& to, Flt width)
 {
 	Shape shape;
@@ -840,4 +817,3 @@ inline Shape ShapeBone(C Vec& from, C Vec& to, Flt width)
 	return shape;
 }
 inline Shape ShapeBone(C SkelBone& bone) { return ShapeBone(bone.pos, bone.to(), bone.width); } // return shape from bone
-/******************************************************************************/

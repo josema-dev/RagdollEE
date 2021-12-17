@@ -40,7 +40,7 @@ player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
 ```
 
 ## Usage
-Version 0.0.1 alpha. For test purpose only!
+Version 1.0.0.
 #### All modes:
 * ESC - Exit editor
 * Left CTRL - Hold to rotate camera with mouse. Hold right mouse button to move camera.
@@ -66,6 +66,9 @@ Version 0.0.1 alpha. For test purpose only!
 ## ChangeLog
 ### Version 0.0.2
 * Save selected actor and joint settings when switch too simulation mode or params are saved to file.
+### Version 1.0.0
+* Two modes: simulation and edit
+* Examples to use with Esenthel Engine
 
 ## Use with Esenthel Editor Code
 After saving parameters for your ragdoll you can load it and use in existing project.

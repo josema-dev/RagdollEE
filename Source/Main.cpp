@@ -133,8 +133,7 @@ void EditMode(Ptr usr)
         b_saveParams.show();
         b_loadParams.show();
         b_updateDensity.show();
-        player.pos(Vec(0, -1.5, 0));
-        player.ragdoll_mode = Game::Chr::RAGDOLL_NONE;
+        player.skel.updateBegin().clear().updateMatrix(Matrix());
         player.ragdollDisable();
     }
     else
@@ -150,7 +149,7 @@ void EditMode(Ptr usr)
 
 void SetSimulationPos()
 {
-    player.pos(Vec(0, 3, 0));
+    player.skel.updateBegin().clear().updateMatrix(Matrix().setRotateX(0.45).move(Vec(0,3,0))).updateEnd();
 }
 
 void SimulationMode(Ptr usr)
@@ -162,16 +161,25 @@ void SimulationMode(Ptr usr)
         Cam.yaw = PI_2;
         b_editMode.set(false);
         b_physicsEnabled.show();
-        REPA(box)box[i].create(Box(1, Vec(0, i * 0.5 + 0.5, i * -0.35 - 0.3)), 0);
+        REPA(box)box[i].create(Box(1, Vec(0, i * 0.5 + 0.5, i * -0.3 - 0.3)), 0);
+        player.pos(Vec(0, 3, 0));
         SetSimulationPos();
     }
     else
     {
+        physicsEnabled = false;
         b_physicsEnabled.set(false);
         b_physicsEnabled.hide();
         b_editMode.set(true);
         REPA(box)box[i].del();
     }
+}
+
+void StartSimulation(Ptr usr)
+{
+    physicsEnabled = true;
+    SetSimulationPos();
+    player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
 }
 
 void InitPre()
@@ -199,6 +207,7 @@ bool Init()
     player.ctrl.del();
     player.ragdoll.create(player.skel, player.scale, StartDensity);
     player.ragdoll.ray(true);
+    player.ragdollEnable();
 
     Cam.at = player.mesh()->ext.pos;
 
@@ -213,8 +222,7 @@ bool Init()
     Gui += b_meshDrawDisable.create(Rect_C(0.8, 0.9, 0.60, 0.08), "Disable Mesh Draw");
     b_meshDrawDisable.mode = BUTTON_TOGGLE;
 
-    Gui += b_physicsEnabled.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Start Simulation");
-    b_physicsEnabled.mode = BUTTON_TOGGLE;
+    Gui += b_physicsEnabled.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Start Simulation").func(StartSimulation);
 
     Gui += b_saveParams.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Save Params").func(saveParams);
     Gui += b_loadParams.create(Rect_C(1.2, 0.7, 0.55, 0.08), "Load Params").func(loadParams);
@@ -284,7 +292,7 @@ void UpdateEditMode()
 }
 void UpdateSimulationMode()
 {
-    if (b_physicsEnabled())
+    if (physicsEnabled)
     {
         Physics.startSimulation().stopSimulation();
     }
@@ -308,7 +316,6 @@ bool Update()
 
     if (Kb.b(KB_LCTRL))
     {
-        
         Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
     }
     else

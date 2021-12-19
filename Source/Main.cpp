@@ -74,10 +74,12 @@ void paramChanged(C EE::Property& prop)
 
 void simulationStart(Ptr usr)
 {
+    parWindow.fadeOut();
     updatePlayerRagdollParams();
     if (!b_physicsEnabled())
     {
         resetRagdoll = true;
+        parWindow.fadeIn();
     }
 }
 

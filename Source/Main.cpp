@@ -14,9 +14,15 @@ Actor ground;
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_meshDrawDisable,
-    b_ragdollDrawDisable, b_saveParams, b_loadParams,
+
+Button b_editMode, b_simulationMode,
+    b_ragdollDrawDisable, b_meshDrawDisable;
+
+Button b_saveParams, b_loadParams,
     b_updateDensity;
+
+Button b_physicsEnabled;
+
 DensityWindow updateDensityWindow{ StartDensity };
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
@@ -74,12 +80,10 @@ void paramChanged(C EE::Property& prop)
 
 void simulationStart(Ptr usr)
 {
-    parWindow.fadeOut();
     updatePlayerRagdollParams();
     if (!b_physicsEnabled())
     {
         resetRagdoll = true;
-        parWindow.fadeIn();
     }
 }
 
@@ -114,6 +118,40 @@ void updateDensity(Ptr usr)
     updateDensityWindow.fadeIn();
 }
 
+void EditMode(Ptr usr)
+{
+    if (b_editMode())
+    {
+        b_simulationMode.set(false);
+        parWindow.fadeIn();
+        b_saveParams.show();
+        b_loadParams.show();
+        b_updateDensity.show();
+    }
+    else
+    {
+        parWindow.fadeOut();
+        b_saveParams.hide();
+        b_loadParams.hide();
+        b_updateDensity.hide();
+        b_simulationMode.set(true);
+    }
+}
+
+void SimulationMode(Ptr usr)
+{
+    if (b_simulationMode())
+    {
+        b_editMode.set(false);
+        b_physicsEnabled.show();
+    }
+    else
+    {
+        b_physicsEnabled.hide();
+        b_editMode.set(true);
+    }
+}
+
 void InitPre()
 {
     EE_INIT();
@@ -140,15 +178,23 @@ bool Init()
     
     Cam.at = player.mesh()->ext.pos;
     
-    Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.9, 0.65, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
+    Gui += b_editMode.create(Rect_C(-1.0, 0.9, 0.60, 0.08), "Edit Mode").func(EditMode);
+    b_editMode.mode = BUTTON_TOGGLE;
+    b_editMode.set(true);
+    Gui += b_simulationMode.create(Rect_C(-0.4, 0.9, 0.60, 0.08), "Simulation Mode").func(SimulationMode);
+    b_simulationMode.mode = BUTTON_TOGGLE;
+
+    Gui += b_ragdollDrawDisable.create(Rect_C(0.2, 0.9, 0.60, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
     b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
-    Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.9, 0.45, 0.08), "Start Simulation").func(simulationStart);
-    b_physicsEnabled.mode = BUTTON_TOGGLE;
-    Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.9, 0.55, 0.08), "Disable Mesh Draw");
+    Gui += b_meshDrawDisable.create(Rect_C(0.8, 0.9, 0.60, 0.08), "Disable Mesh Draw");
     b_meshDrawDisable.mode = BUTTON_TOGGLE;
-    Gui += b_saveParams.create(Rect_C(0.9, 0.9, 0.55, 0.08), "Save Params").func(saveParams);
-    Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
-    Gui += b_updateDensity.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Update Density").func(updateDensity);
+
+    Gui += b_physicsEnabled.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Start Simulation").func(simulationStart);
+    b_physicsEnabled.mode = BUTTON_TOGGLE;
+
+    Gui += b_saveParams.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Save Params").func(saveParams);
+    Gui += b_loadParams.create(Rect_C(1.2, 0.7, 0.55, 0.08), "Load Params").func(loadParams);
+    Gui += b_updateDensity.create(Rect_C(1.2, 0.6, 0.55, 0.08), "Update Density").func(updateDensity);
     parWindow.create();
 
     updateDensityWindow.create();

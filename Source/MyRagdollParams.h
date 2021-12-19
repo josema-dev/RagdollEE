@@ -41,8 +41,7 @@ public:
     RagdollData();
     RagdollData(Flt density);
     RagdollData(Flt density, C Mems<RagdollActorData>& ragdollBones);
-    
-    //bool Load(C EE::Str& fileName);
+
     C RagdollActorData* RagdollBone(EE::Str name) C;
     RagdollActorData* RagdollBone(EE::Str name);
     C Flt& Density() { return _density; }

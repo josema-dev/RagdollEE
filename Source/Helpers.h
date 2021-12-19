@@ -6,19 +6,19 @@
 
 enum ACTOR_FLAG
 {
-	ACTOR_FREEZE_POS_X = 1 << 0,
-	ACTOR_FREEZE_POS_Y = 1 << 1,
-	ACTOR_FREEZE_POS_Z = 1 << 2,
-	ACTOR_FREEZE_ROT_X = 1 << 3,
-	ACTOR_FREEZE_ROT_Y = 1 << 4,
-	ACTOR_FREEZE_ROT_Z = 1 << 5,
-	ACTOR_KINEMATIC = 1 << 6,
-	ACTOR_GRAVITY = 1 << 7,
-	ACTOR_RAY = 1 << 8,
-	ACTOR_COLLISION = 1 << 9,
-	ACTOR_TRIGGER = 1 << 10,
-	ACTOR_SLEEP = 1 << 11,
-	ACTOR_CCD = 1 << 12,
+    ACTOR_FREEZE_POS_X = 1 << 0,
+    ACTOR_FREEZE_POS_Y = 1 << 1,
+    ACTOR_FREEZE_POS_Z = 1 << 2,
+    ACTOR_FREEZE_ROT_X = 1 << 3,
+    ACTOR_FREEZE_ROT_Y = 1 << 4,
+    ACTOR_FREEZE_ROT_Z = 1 << 5,
+    ACTOR_KINEMATIC = 1 << 6,
+    ACTOR_GRAVITY = 1 << 7,
+    ACTOR_RAY = 1 << 8,
+    ACTOR_COLLISION = 1 << 9,
+    ACTOR_TRIGGER = 1 << 10,
+    ACTOR_SLEEP = 1 << 11,
+    ACTOR_CCD = 1 << 12,
 };
 
 #if (defined _M_IX86 || defined __i386__) || (defined _M_X64 || defined __x86_64__) || (ARM && X64) || WEB // x86 32/64 and ARM 64 can do unaligned reads. When using WebAssembly (WASM) for WEB platform, unaligned access is supported, however when executed on platforms without native unaligned access support (Arm32) it will be extremely slow, however since Arm32 is in extinction then it's better to enable unaligned access to get better performance on majority of platforms that support it.
@@ -39,8 +39,8 @@ T1(TYPE)   void _Unaligned(UInt& dest, C TYPE& src) { Unaligned(dest, (UInt)Unal
 
 enum ACTOR_GROUPS // actor groups (for example in the game you can specify following groups: door, item, character, ..)
 {
-	GROUP_BACKGROUND, // background
-	GROUP_OBJ, // objects
+    GROUP_BACKGROUND, // background
+    GROUP_OBJ, // objects
 };
 
 #endif //__HELPERS_H__

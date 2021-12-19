@@ -332,7 +332,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, Flt scale, Flt density,
     return false;
 }
 
-Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
+Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, C RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
 {
     del();
 
@@ -426,7 +426,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                 }
             }
 
-            const RagdollActorData *rad = ragdollData.RagdollBone(sb.name);
+            C RagdollActorData *rad = ragdollData.RagdollBone(sb.name);
             rb.actor.adamping(rad->angularDamping);
             rb.actor.damping(rad->damping);
             rb.actor.sleepEnergy(rad->sleepEnergy);
@@ -448,7 +448,7 @@ Bool MyRagdoll::createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragd
                     {
                         Bone& ragdollBoneParent = _bones[rbon_parent];
                         C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
-                        const RagdollActorData *rad = ragdollData.RagdollBone(skelBone.name);
+                        C RagdollActorData *rad = ragdollData.RagdollBone(skelBone.name);
                         ragdollBone.jointData = rad->jointData;
                         createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad->jointData);
                     }
@@ -471,22 +471,22 @@ MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, Flt scale, Flt densi
     return T;
 }
 
-MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, C RagdollData& ragdollData, Flt scale, Flt density, Bool kinematic)
 {
     if (!createTry(anim_skel, ragdollData, scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
 
-MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale, Flt density, Bool kinematic)
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, C EE::Str& fileName, Flt scale, Flt density, Bool kinematic)
 {
-    const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
+    C Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
     if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
 
-MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, const UID& id, Flt scale, Flt density, Bool kinematic)
+MyRagdoll& MyRagdoll::create(C AnimatedSkeleton& anim_skel, C UID& id, Flt scale, Flt density, Bool kinematic)
 {
-    const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(id);
+    C Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(id);
     if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
     return T;
 }
@@ -820,11 +820,11 @@ Bool MyRagdoll::loadState(File& f) // don't delete on fail, as here we're loadin
     return false;
 }
 #if RAGDOLL_EDITOR
-void MyRagdoll::recreateJoint(const Int ragdollBoneIdx)
+void MyRagdoll::recreateJoint(C Int ragdollBoneIdx)
 {
     if (ragdollBoneIdx == 0)
         return;
-    const JointData& jointData = _bones[ragdollBoneIdx].jointData;
+    C JointData& jointData = _bones[ragdollBoneIdx].jointData;
     Bone& ragdollBone = _bones[ragdollBoneIdx];
     Bone& ragdollBoneParent = _bones[((ragdollBone.rbon_parent == 0xFF) ? 0 : ragdollBone.rbon_parent)];
     if (jointData.type == JOINT_ENUM::JOINT_BODY_HINGE)
@@ -847,7 +847,7 @@ Mems<RagdollActorData> MyRagdoll::GetRagdollData()
     Mems<RagdollActorData> ragdollActorsData;
     for (int i = 0; i < _bones.elms(); i++)
     {
-        const Bone &rb = _bones[i];
+        C Bone &rb = _bones[i];
         RagdollActorData rad;
         rad.damping = rb.actor.damping();
         rad.angularDamping = rb.actor.adamping();
@@ -861,7 +861,7 @@ Mems<RagdollActorData> MyRagdoll::GetRagdollData()
     return ragdollActorsData;
 }
 
-void MyRagdoll::createJoint(Actor &rb, Actor &rbp, const JointData& jointData)
+void MyRagdoll::createJoint(Actor &rb, Actor &rbp, C JointData& jointData)
 {
     switch (jointData.type)
     {

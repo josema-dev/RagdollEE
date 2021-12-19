@@ -40,12 +40,12 @@ class RagdollData
 public:
     RagdollData();
     RagdollData(Flt density);
-    RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones);
+    RagdollData(Flt density, C Mems<RagdollActorData>& ragdollBones);
     
-    //bool Load(const EE::Str& fileName);
-    const RagdollActorData* RagdollBone(EE::Str name) const;
+    //bool Load(C EE::Str& fileName);
+    C RagdollActorData* RagdollBone(EE::Str name) C;
     RagdollActorData* RagdollBone(EE::Str name);
-    const Flt& Density() { return _density; }
+    C Flt& Density() { return _density; }
     RagdollData& Density(Flt density) { _density = density; return T; }
 
 protected:
@@ -58,10 +58,10 @@ private:
 class RagdollDataHelpers
 {
 public:
-    static bool SaveRagdollData(const EE::Str& fileName, const RagdollData &ragdollData);
-    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName);
+    static bool SaveRagdollData(C EE::Str& fileName, C RagdollData &ragdollData);
+    static Mems<RagdollActorData> LoadRagdollData(C EE::Str& fileName);
     static Mems<RagdollActorData> LoadRagdollData(C UID& id);
-    static Mems<RagdollActorData> LoadRagdollData(const EE::Str& fileName, Flt& densityOut);
+    static Mems<RagdollActorData> LoadRagdollData(C EE::Str& fileName, Flt& densityOut);
     static Mems<RagdollActorData> LoadRagdollData(C UID& id, Flt& densityOut);
     static Mems<RagdollActorData> GetDefaultRagdollData();
 };

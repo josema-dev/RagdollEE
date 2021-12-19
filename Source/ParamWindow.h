@@ -74,7 +74,7 @@ class ParamWindow : Window
         props.New().create("MinAngle (Deg)", MEMBER(BoneInfo, jointMinAngle));
         maxAngleIdx = props.elms();
         props.New().create("MaxAngle (Deg)", MEMBER(BoneInfo, jointMaxAngle));
-        AddProperties(props, *this, Vec2(0.04, -0.04), 0.06, 0.6);
+        AddProperties(props, T, Vec2(0.04, -0.04), 0.06, 0.6);
         REPAO(props).toGui(&data);
     }
 

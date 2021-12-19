@@ -14,10 +14,10 @@ public:
 	void create()
 	{
 		Gui += Window::create(Rect_C(0.8, 1.0, 1.0, 0.5), "Skel Properties").barVisible(true).pos(Vec2(0.2, 0.4)).visible(false);
-		*this += _text.create(Rect_C(0.3, -0.1, 0.4, 0.1), "Density:");
-		*this += _textLine.create(Rect_C(0.7, -0.1, 0.4, 0.1), Str(_density));
-		*this += b_updateValue.create(Rect_C(0.3, -0.3, 0.35, 0.1), "Update").func(Update, *this);
-		*this += b_cancel.create(Rect_C(0.7, -0.3, 0.35, 0.1), "Cancel").func(Cancel, *this);
+		T += _text.create(Rect_C(0.3, -0.1, 0.4, 0.1), "Density:");
+		T += _textLine.create(Rect_C(0.7, -0.1, 0.4, 0.1), Str(_density));
+		T += b_updateValue.create(Rect_C(0.3, -0.3, 0.35, 0.1), "Update").func(Update, T);
+		T += b_cancel.create(Rect_C(0.7, -0.3, 0.35, 0.1), "Cancel").func(Cancel, T);
 	}
 
 	void SetUpdateFunc(void(*func)(Flt))

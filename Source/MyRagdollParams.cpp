@@ -6,9 +6,9 @@
 
 RagdollData::RagdollData() : _density{ 1.0f } {}
 RagdollData::RagdollData(Flt density) : _density { density } {}
-RagdollData::RagdollData(Flt density, const Mems<RagdollActorData>& ragdollBones) : _density{ density }, _ragdollBones{ ragdollBones }{}
+RagdollData::RagdollData(Flt density, C Mems<RagdollActorData>& ragdollBones) : _density{ density }, _ragdollBones{ ragdollBones }{}
 
-const RagdollActorData* RagdollData::RagdollBone(EE::Str name) const
+C RagdollActorData* RagdollData::RagdollBone(EE::Str name) C
 {
 	for(int i=0; i<_ragdollBones.elms(); i++)
 	{
@@ -53,7 +53,7 @@ Mems<RagdollActorData> RagdollDataHelpers::GetDefaultRagdollData()
 	return ragdollActors;
 }
 
-Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileName)
+Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(C EE::Str& fileName)
 {
 	Flt densityOut = 1000.0f;
 	return LoadRagdollData(fileName, densityOut);
@@ -140,7 +140,7 @@ Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(C UID &id, Flt& densi
 	return ragdollData;
 }
 
-Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileName, Flt& densityOut)
+Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(C EE::Str& fileName, Flt& densityOut)
 {
 	densityOut = 1000.0f;
 	Mems<RagdollActorData> ragdollData;
@@ -215,14 +215,14 @@ Mems<RagdollActorData> RagdollDataHelpers::LoadRagdollData(const EE::Str& fileNa
 	return ragdollData;
 }
 
-bool RagdollDataHelpers::SaveRagdollData(const EE::Str& fileName, const RagdollData& ragdollData)
+bool RagdollDataHelpers::SaveRagdollData(C EE::Str& fileName, C RagdollData& ragdollData)
 {
 	XmlData xml;
 	XmlNode& node = xml.getNode("SkelParams");
 	node.params.New().set("Density", ragdollData._density);
 	for (int i = 0; i < ragdollData._ragdollBones.elms(); i++)
 	{
-		const RagdollActorData& ragdollBone = ragdollData._ragdollBones[i];
+		C RagdollActorData& ragdollBone = ragdollData._ragdollBones[i];
 		XmlNode& node = xml.getNode(ragdollBone.name);
 		node.params.New().set("Idx", i);
 		node.params.New().set("Name", ragdollBone.name);

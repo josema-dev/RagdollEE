@@ -1,4 +1,3 @@
-
 #pragma pack(push, 1)
 struct RagdollDesc
 {
@@ -34,20 +33,20 @@ class MyRagdoll
 		return T;
 	}
 
-	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, C RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		if (!createTry(anim_skel, ragdollData, scale, density, kinematic))Exit("Can't create Ragdoll");
 		return T;
 	}
-	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const EE::Str& fileName, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, C EE::Str& fileName, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
-		const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
+		C Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(fileName);
 		if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
 		return T;
 	}
-	MyRagdoll& create(C AnimatedSkeleton& anim_skel, const UID& id, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	MyRagdoll& create(C AnimatedSkeleton& anim_skel, C UID& id, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
-		const Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(id);
+		C Mems<RagdollActorData> ragdollActorData = RagdollDataHelpers::LoadRagdollData(id);
 		if (!createTry(anim_skel, RagdollData(density, ragdollActorData), scale, density, kinematic))Exit("Can't create Ragdoll");
 		return T;
 	}
@@ -343,7 +342,7 @@ class MyRagdoll
 		}
 		return false;
 	}
-	Bool     createTry(C AnimatedSkeleton& anim_skel, const RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
+	Bool     createTry(C AnimatedSkeleton& anim_skel, C RagdollData& ragdollData, Flt scale = 1, Flt density = 1, Bool kinematic = false)
 	{
 		del();
 
@@ -437,7 +436,7 @@ class MyRagdoll
 					}
 				}
 
-				const RagdollActorData* rad = ragdollData.RagdollBone(sb.name);
+				C RagdollActorData* rad = ragdollData.RagdollBone(sb.name);
 				rb.actor.adamping(rad->angularDamping);
 				rb.actor.damping(rad->damping);
 				rb.actor.sleepEnergy(rad->sleepEnergy);
@@ -459,7 +458,7 @@ class MyRagdoll
 						{
 							Bone& ragdollBoneParent = _bones[rbon_parent];
 							C SkelBone& skelBoneParent = skel.bones[ragdollBoneParent.skel_bone];
-							const RagdollActorData* rad = ragdollData.RagdollBone(skelBone.name);
+							C RagdollActorData* rad = ragdollData.RagdollBone(skelBone.name);
 							ragdollBone.jointData = rad->jointData;
 							createJoint(ragdollBone.actor, ragdollBoneParent.actor, rad->jointData);
 						}
@@ -762,7 +761,7 @@ class MyRagdoll
 	MyRagdoll() { zero(); }
 
 private:
-	void createJoint(Actor& rb, Actor& rbp, const JointData& jointData)
+	void createJoint(Actor& rb, Actor& rbp, C JointData& jointData)
 	{
 		switch (jointData.type)
 		{

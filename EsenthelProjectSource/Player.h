@@ -1,7 +1,7 @@
 class Player : public Game::Chr
 {
 public:
-	static const Flt EPS_ANIM_BLEND(1.0f / 4096);                                     // Animation Blend Epsilon (default value used for ignoring animations)
+	static C Flt EPS_ANIM_BLEND(1.0f / 4096);                                     // Animation Blend Epsilon (default value used for ignoring animations)
 	void ragdollValidate() override
 	{
 		if (!ragdoll.is()) // if ragdoll hasn't yet been created

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Player.h"
 /******************************************************************************/
-static const Flt EPS_ANIM_BLEND(1.0f / 4096);                                     // Animation Blend Epsilon (default value used for ignoring animations)
+static C Flt EPS_ANIM_BLEND(1.0f / 4096);                                     // Animation Blend Epsilon (default value used for ignoring animations)
 
 void Player::ragdollValidate()
 {

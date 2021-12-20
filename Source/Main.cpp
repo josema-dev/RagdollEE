@@ -11,17 +11,23 @@ static const Flt StartDensity = 5000;
 
 Player player;
 Actor ground;
+Actor box[3];
 Bool physicsEnabled = false;
 Int lit = -1;
 Grab grab;
-Button b_physicsEnabled, b_meshDrawDisable,
-    b_ragdollDrawDisable, b_saveParams, b_loadParams,
+
+Button b_editMode, b_simulationMode,
+    b_ragdollDrawDisable, b_meshDrawDisable;
+
+Button b_saveParams, b_loadParams,
     b_updateDensity;
+
+Button b_physicsEnabled;
+
 DensityWindow updateDensityWindow{ StartDensity };
 ParamWindow parWindow;
 Int ActiveBoneIdx = -1;
 Int ParentBoneIdx = -1;
-bool resetRagdoll = false;
 
 void dummyDataNoBoneSelected()
 {
@@ -72,17 +78,6 @@ void paramChanged(C EE::Property& prop)
     parWindow.JointTypeChanged(const_cast<EE::Property&>(prop));
 }
 
-void simulationStart(Ptr usr)
-{
-    parWindow.fadeOut();
-    updatePlayerRagdollParams();
-    if (!b_physicsEnabled())
-    {
-        resetRagdoll = true;
-        parWindow.fadeIn();
-    }
-}
-
 void disableRagdollDraw(Ptr usr)
 {
     if (b_ragdollDrawDisable())
@@ -114,6 +109,80 @@ void updateDensity(Ptr usr)
     updateDensityWindow.fadeIn();
 }
 
+void DeselectBoneAndUpdateParams()
+{
+    if (ActiveBoneIdx >= 0)
+    {
+        updatePlayerRagdollParams();
+    }
+    ActiveBoneIdx = -1;
+    ParentBoneIdx = -1;
+    dummyDataNoBoneSelected();
+    b_loadParams.enabled(true);
+    b_updateDensity.enabled(true);
+}
+
+void EditMode(Ptr usr)
+{
+    if (b_editMode())
+    {
+        Cam.dist = 1;
+        Cam.yaw = PI;
+        Cam.pitch = 0.0;
+        b_simulationMode.set(false);
+        parWindow.fadeIn();
+        b_saveParams.show();
+        b_loadParams.show();
+        b_updateDensity.show();
+        player.skel.updateBegin().clear().updateMatrix(Matrix());
+        player.ragdollDisable();
+    }
+    else
+    {
+        parWindow.fadeOut();
+        b_saveParams.hide();
+        b_loadParams.hide();
+        b_updateDensity.hide();
+        b_simulationMode.set(true);
+        DeselectBoneAndUpdateParams();
+    }
+}
+
+void SetSimulationPos()
+{
+    player.skel.updateBegin().clear().updateMatrix(Matrix().setRotateX(0.45).move(Vec(0,3,0))).updateEnd();
+}
+
+void SimulationMode(Ptr usr)
+{
+    if (b_simulationMode())
+    {
+        Cam.dist = 5;
+        Cam.pitch = -0.3;
+        Cam.yaw = PI_2;
+        b_editMode.set(false);
+        b_physicsEnabled.show();
+        REPA(box)box[i].create(Box(1, Vec(0, i * 0.5 + 0.5, i * -0.3 - 0.3)), 0);
+        player.pos(Vec(0, 3, 0));
+        SetSimulationPos();
+    }
+    else
+    {
+        physicsEnabled = false;
+        b_physicsEnabled.set(false);
+        b_physicsEnabled.hide();
+        b_editMode.set(true);
+        REPA(box)box[i].del();
+    }
+}
+
+void StartSimulation(Ptr usr)
+{
+    physicsEnabled = true;
+    SetSimulationPos();
+    player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
+}
+
 void InitPre()
 {
     EE_INIT();
@@ -130,25 +199,34 @@ bool Init()
     Sky.atmospheric();
 
     Physics.create();
+
     ground.create(Box(15, 1, 15, Vec(0, -0.5, 0)), 0);
     ground.group(GROUP_BACKGROUND);
+
     player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
-    player.pos(Vec(0, -1.5, 0));
+    player.pos(Vec(0, 0, 0));
     player.ctrl.del();
     player.ragdoll.create(player.skel, player.scale, StartDensity);
     player.ragdoll.ray(true);
-    
+
     Cam.at = player.mesh()->ext.pos;
-    
-    Gui += b_ragdollDrawDisable.create(Rect_C(-0.9, 0.9, 0.65, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
+
+    Gui += b_editMode.create(Rect_C(-1.0, 0.9, 0.60, 0.08), "Edit Mode").func(EditMode);
+    b_editMode.mode = BUTTON_TOGGLE;
+    b_editMode.set(true);
+    Gui += b_simulationMode.create(Rect_C(-0.4, 0.9, 0.60, 0.08), "Simulation Mode").func(SimulationMode);
+    b_simulationMode.mode = BUTTON_TOGGLE;
+
+    Gui += b_ragdollDrawDisable.create(Rect_C(0.2, 0.9, 0.60, 0.08), "Disable Ragdoll Draw").func(disableRagdollDraw);
     b_ragdollDrawDisable.mode = BUTTON_TOGGLE;
-    Gui += b_physicsEnabled.create(Rect_C(-0.3, 0.9, 0.45, 0.08), "Start Simulation").func(simulationStart);
-    b_physicsEnabled.mode = BUTTON_TOGGLE;
-    Gui += b_meshDrawDisable.create(Rect_C(0.3, 0.9, 0.55, 0.08), "Disable Mesh Draw");
+    Gui += b_meshDrawDisable.create(Rect_C(0.8, 0.9, 0.60, 0.08), "Disable Mesh Draw");
     b_meshDrawDisable.mode = BUTTON_TOGGLE;
-    Gui += b_saveParams.create(Rect_C(0.9, 0.9, 0.55, 0.08), "Save Params").func(saveParams);
-    Gui += b_loadParams.create(Rect_C(0.9, 0.8, 0.55, 0.08), "Load Params").func(loadParams);
-    Gui += b_updateDensity.create(Rect_C(0.9, 0.7, 0.55, 0.08), "Update Density").func(updateDensity);
+
+    Gui += b_physicsEnabled.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Start Simulation").func(StartSimulation);
+
+    Gui += b_saveParams.create(Rect_C(1.2, 0.8, 0.55, 0.08), "Save Params").func(saveParams);
+    Gui += b_loadParams.create(Rect_C(1.2, 0.7, 0.55, 0.08), "Load Params").func(loadParams);
+    Gui += b_updateDensity.create(Rect_C(1.2, 0.6, 0.55, 0.08), "Update Density").func(updateDensity);
     parWindow.create();
 
     updateDensityWindow.create();
@@ -177,46 +255,8 @@ void GetWorldObjectUnderCursor()
     }
 }
 
-bool Update()
+void UpdateEditMode()
 {
-    Gui.update();
-    if (b_physicsEnabled())
-    {
-        Physics.startSimulation().stopSimulation();
-    }
-
-    if (Kb.bp(KB_ESC))
-        return false;
-
-    if (resetRagdoll)
-    {
-        if (player.ragdoll_mode == Game::Chr::RAGDOLL_FULL)
-        {
-            player.ragdollDisable();
-            resetRagdoll = false;
-        }
-    }
-
-    player.update();
-
-    if (!b_physicsEnabled())
-    {
-        player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
-    }
-
-    if (player.ragdoll_mode != Game::Chr::RAGDOLL_FULL)
-        player.ragdollEnable();
-
-    if (Kb.b(KB_LCTRL))
-    {
-        
-        Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
-    }
-    else
-    {
-        Cam.transformByMouse(0.1, 100, CAMH_ZOOM);
-    }
-
     if (Ms.bp(0) && Kb.b(KB_LSHIFT))
     {
         if (lit >= 0 && lit < player.ragdoll.bones())
@@ -241,49 +281,55 @@ bool Update()
         }
         else
         {
-            if (ActiveBoneIdx >= 0)
-            {
-                updatePlayerRagdollParams();
-            }
-            ActiveBoneIdx = -1;
-            ParentBoneIdx = -1;
-            dummyDataNoBoneSelected();
-            b_loadParams.enabled(true);
-            b_updateDensity.enabled(true);
+            DeselectBoneAndUpdateParams();
         }
     }
 
-    if (lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1))
+    if (!(lit >= 0 && lit < player.ragdoll.bones() && Ms.b(1)))
     {
-        if (!grab.is())
-        {
-            Vec pos, dir;
-            ScreenToPosDir(Ms.pos(), pos, dir);
-            PhysHit selector;
-            if (Physics.ray(pos, dir * D.viewRange(), &selector)) {
-                grab.pos(selector.plane.pos);
-            }
-
-            grab.create(player.ragdoll.bone(lit).actor, selector.plane.pos, 1500.0f);
-        }
-        else
-        {
-            Vec dir(0);
-            dir.x += Ms.d().x*100;
-            dir.y += Ms.d().y*100;
-            grab.pos(grab.pos() + dir * Time.d() * 2);
-            
-            /*Vec result = (0, 0, 0);
-            result.x = Ms.d().x * Cos(player.angle.x) - Ms.d().y * Sin(player.angle.x);
-            result.z = Ms.d().x * Sin(player.angle.x) + Ms.d().y * Cos(player.angle.x);
-            grab.pos(grab.pos() + result * Time.d() * 50);*/
-        }
+        GetWorldObjectUnderCursor();
+    }
+}
+void UpdateSimulationMode()
+{
+    if (physicsEnabled)
+    {
+        Physics.startSimulation().stopSimulation();
     }
     else
     {
-        if (grab.is())
-            grab.del();
-        GetWorldObjectUnderCursor();
+        player.ragdoll.fromSkel(player.skel, player.ctrl.actor.vel());
+    }
+}
+
+bool Update()
+{
+    Gui.update();
+
+    if (Kb.bp(KB_ESC))
+        return false;
+
+    player.update();
+
+    if (player.ragdoll_mode != Game::Chr::RAGDOLL_FULL)
+        player.ragdollEnable();
+
+    if (Kb.b(KB_LCTRL))
+    {
+        Cam.transformByMouse(0.1, 100, CAMH_ZOOM | (Ms.b(1) ? CAMH_MOVE : CAMH_ROT)); // default camera handling actions
+    }
+    else
+    {
+        Cam.transformByMouse(0.1, 100, CAMH_ZOOM);
+    }
+
+    if (b_editMode())
+    {
+        UpdateEditMode();
+    }
+    else if (b_simulationMode())
+    {
+        UpdateSimulationMode();
     }
 
     return true;
@@ -307,7 +353,9 @@ void Draw()
 {
     Renderer(Render);
     ground.draw(WHITE);
-    
+    if(b_simulationMode())
+        REPA(box)box[i].draw(WHITE);
+
     if (!b_ragdollDrawDisable())
     {
         player.ragdoll.draw(RED, YELLOW, PINK, ActiveBoneIdx, ParentBoneIdx);
@@ -316,11 +364,6 @@ void Draw()
             player.ragdoll.drawJoints(BLACK, ActiveBoneIdx);
         }
     }
-    /*D.text(Vec2(0, 0.9f), S+"Physics enabled: " + physicsEnabled + " player: " + player.pos() + " lit: " + lit);
-    if (lit >= 0 && lit < player.ragdoll.bones())
-    {
-        D.text(Vec2(0, 0.8f), S + "Selected bone name: " + player.ragdoll.bone(lit).name);
-    }*/
 
     Gui.draw();
 }

@@ -128,6 +128,7 @@ void EditMode(Ptr usr)
     {
         Cam.dist = 1;
         Cam.yaw = PI;
+        Cam.pitch = 0.0;
         b_simulationMode.set(false);
         parWindow.fadeIn();
         b_saveParams.show();
@@ -203,11 +204,10 @@ bool Init()
     ground.group(GROUP_BACKGROUND);
 
     player.create(*ObjectPtr(UID(2919624831, 1261075521, 753053852, 3651670215)));
-    player.pos(Vec(0, -1.5, 0));
+    player.pos(Vec(0, 0, 0));
     player.ctrl.del();
     player.ragdoll.create(player.skel, player.scale, StartDensity);
     player.ragdoll.ray(true);
-    player.ragdollEnable();
 
     Cam.at = player.mesh()->ext.pos;
 

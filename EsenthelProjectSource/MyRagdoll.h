@@ -70,7 +70,7 @@ class MyRagdoll
             FREPA(skel.bones) // order is important, main bones should be added at start, in case the skeleton doesn't have "body" bone, and as main bone (zero) should be set some different
             {
                 C SkelBone& skelBone = skel.bones[i];
-                if (skelBone.flag & BONE_RAGDOLL)
+                if (skelBone.flag & BONE_RAGDOLL && ragdollData.RagdollBone(skelBone.name))
                 {
                     Vec posBone = skelBone.pos,
                         posBoneEnd = skelBone.to();

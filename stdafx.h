@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "E:/Esenthel/Engine/Bin/EsenthelEngine/_/System/begin.h"
+#include "ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine/_/System/begin.h"
 
-#include "E:/Esenthel/Engine/Bin/EsenthelEngine/_/System/end.h"
+#include "ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine/_/System/end.h"
 
-#include "E:/Esenthel/Engine/Bin/EsenthelEngine/EsenthelEngine.h"
+#include "ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine/EsenthelEngine.h"

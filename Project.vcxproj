@@ -314,7 +314,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineArm32DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineArm32DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -357,7 +357,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineUniversalArm32DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineUniversalArm32DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt;libcpmt</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -404,7 +404,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:/Esenthel/Engine/Bin/EsenthelEngine64DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine64DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -451,7 +451,7 @@
       <MsExtensions>true</MsExtensions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -500,7 +500,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:/Esenthel/Engine/Bin/EsenthelEngineUniversal64DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineUniversal64DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt;libcpmt</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -547,7 +547,7 @@
       <MsExtensions>true</MsExtensions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt;libcpmt</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -594,7 +594,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>--memory-init-file 1 -s ALLOW_MEMORY_GROWTH=1 -s USE_WEBGL2=1 -s WASM=1</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -640,7 +640,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>--memory-init-file 1 -s ALLOW_MEMORY_GROWTH=1 -s USE_WEBGL2=1 -s WASM=1</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -685,7 +685,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineArm32DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATHBin/EsenthelEngineArm32DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -730,7 +730,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineUniversalArm32DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineUniversalArm32DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
@@ -778,7 +778,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:/Esenthel/Engine/Bin/EsenthelEngine64DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine64DX11.lib";d3d11.lib;d3d12.lib;d3dcompiler.lib;dinput8.lib;dsound.lib;dxgi.lib;dxguid.lib;Xinput9_1_0.lib;xaudio2.lib;winmm.lib;wininet.lib;ws2_32.lib;imm32.lib;psapi.lib;rpcrt4.lib;version.lib;libcmt.lib;libcpmt.lib;libucrt.lib;libvcruntime.lib;oldnames.lib;iphlpapi.lib;secur32.lib;Setupapi.lib;Dbghelp.lib;comsupp.lib;concrt.lib;Mscms.lib;Advapi32.lib;User32.lib;Shell32.lib;Ole32.lib;OleAut32.lib;Gdi32.lib;uuid.lib;odbc32.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -831,7 +831,7 @@
       <MsExtensions>true</MsExtensions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -882,7 +882,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4078 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>"E:/Esenthel/Engine/EsenthelEngineUniversal64DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineUniversal64DX11.lib";%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
@@ -936,7 +936,7 @@
       <MsExtensions>true</MsExtensions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngineNintendoSwitch.a";libz.a;libnn_gll.a;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
@@ -984,7 +984,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>--memory-init-file 1 -s ALLOW_MEMORY_GROWTH=1 -s USE_WEBGL2=1 -s WASM=1</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -1031,7 +1031,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>--memory-init-file 1 -s ALLOW_MEMORY_GROWTH=1 -s USE_WEBGL2=1 -s WASM=1</AdditionalOptions>
-      <AdditionalDependencies>"E:\Esenthel\Engine\Esenthel/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine.bc";%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -1076,7 +1076,7 @@
     <ClInclude Include="Source\ParamWindow.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="stdafx.h" />
-    <Media Include="E:\Esenthel\Engine\Esenthel/Bin/Universal\Engine.pak">
+    <Media Include="ESENTHEL_ENGINE_INSTALL_PATH/Bin/Universal\Engine.pak">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Universal DX11|Emscripten'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release DX11|Emscripten'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug DX11|Emscripten'">true</ExcludedFromBuild>

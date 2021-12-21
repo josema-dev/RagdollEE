@@ -11,7 +11,7 @@ Ragdoll edytor based on build in Esenthel Engine classes Ragdoll and Chr.
 * Open stdafx.h and update path to where Esenthel engine is installed.
 Change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
 * Open project properties. Go to Linker->Input->Additional Dependencies and
-change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
+change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed (You can also open Project.vcxproj in text editor and replace ESENTHEL_ENGINE_INSTALL_PATH).
 * Build, if have some include errors or linker check if previous steps are make correct.
 ```
 Error (active)	E1696	cannot open source file "ESENTHEL_ENGINE_INSTALL_PATH/Bin/EsenthelEngine/_/System/begin.h"

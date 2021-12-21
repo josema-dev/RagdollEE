@@ -6,6 +6,7 @@ Ragdoll edytor based on build in Esenthel Engine classes Ragdoll and Chr.
 * C++
 
 ## Getting Started
+* Copy ESENTHEL_ENGINE_INSTALL_PATH\Bin\Esenthel.pak to REPOSITORY_PATH\Bin
 * Open Project.sln and update all paths to point to Esenthel engine installation directory.
 * Open stdafx.h and update path to where Esenthel engine is installed.
 Change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.

@@ -12,6 +12,8 @@ struct RagdollActorDesc
 };
 #pragma pack(pop)
 
+struct JointData;
+
 class MyRagdoll
 {
     struct Bone // ragdoll bone

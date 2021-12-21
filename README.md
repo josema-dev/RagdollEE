@@ -10,7 +10,7 @@ Ragdoll edytor based on build in Esenthel Engine classes Ragdoll and Chr.
 * Open Project.sln and update all paths to point to Esenthel engine installation directory.
 * Open stdafx.h and update path to where Esenthel engine is installed.
 Change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
-* Open project property. Go to Linker->Input->Additional Dependencies and
+* Open project properties. Go to Linker->Input->Additional Dependencies and
 change ESENTHEL_ENGINE_INSTALL_PATH to path where engine is installed.
 * Build, if have some include errors or linker check if previous steps are make correct.
 ```

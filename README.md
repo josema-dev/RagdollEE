@@ -1,5 +1,7 @@
 ## General info
 Ragdoll edytor based on build in Esenthel Engine classes Ragdoll and Chr.
+* master - main branch with release version.
+* development - branch with development version.
 ## Technologies
 * [Esenthel Engine](http://www.esenthel.com)
 * Microsoft Visual Studio

@@ -1,0 +1,66 @@
+#pragma once
+
+#include "stdafx.h"
+#include "@@headers.h"
+
+class Player;
+
+enum class JOINT_ENUM
+{
+    JOINT_NO = -1,
+    JOINT_BODY_SPHERICAL = 0,
+    JOINT_BODY_HINGE = 1,
+};
+
+struct JointData
+{
+    Vec anchor = Vec(0);
+    Vec axis = Vec(0);
+    JOINT_ENUM type = JOINT_ENUM::JOINT_NO;
+    Flt swing = 0.0f;
+    Flt twist = 0.0f;
+    Flt minAngle = 0.0f;
+    Flt maxAngle = 0.0f;
+    Int idx = -1;
+};
+
+struct RagdollActorData
+{
+    Char8 name[32]; // name
+    JointData jointData;
+    Byte ragdollBoneParentIdx;
+    Byte skelBoneIdx;
+    Flt angularDamping;
+    Flt damping;
+    Flt sleepEnergy;
+};
+
+class RagdollData
+{
+public:
+    RagdollData();
+    RagdollData(Flt density);
+    RagdollData(Flt density, C Mems<RagdollActorData>& ragdollBones);
+
+    C RagdollActorData* RagdollBone(EE::Str name) C;
+    RagdollActorData* RagdollBone(EE::Str name);
+    C Flt& Density() { return _density; }
+    RagdollData& Density(Flt density) { _density = density; return T; }
+
+protected:
+private:
+    Flt _density;
+    Mems<RagdollActorData> _ragdollBones;
+    friend class RagdollDataHelpers;
+};
+
+class RagdollDataHelpers
+{
+public:
+    static bool SaveRagdollData(C EE::Str& fileName, C RagdollData &ragdollData);
+    static Mems<RagdollActorData> LoadRagdollData(C EE::Str& fileName);
+    static Mems<RagdollActorData> LoadRagdollData(C UID& id);
+    static Mems<RagdollActorData> LoadRagdollData(C EE::Str& fileName, Flt& densityOut);
+    static Mems<RagdollActorData> LoadRagdollData(C UID& id, Flt& densityOut);
+    static Mems<RagdollActorData> GetDefaultRagdollData();
+};
